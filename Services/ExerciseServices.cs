@@ -9,18 +9,16 @@ namespace GymRatApi.Services
         {
         }
 
-        public Task<Exercise> Create(string name, string description ,Video video,List<BodyPart> bodyParts)
+        public Task<Exercise> Create(string name, string description)
         {
-            if (string.IsNullOrEmpty(name) || (video == null) || (bodyParts == null))
+            if (string.IsNullOrEmpty(name))
             {
                 throw new ArgumentNullException("name/video/bodyParts is null");
             }
             var newExercise = new Exercise() 
             { 
               Description = description,
-              Name = name,
-              Video = video, 
-              Parts = bodyParts
+              Name = name
             };
             _dbContext.Add(newExercise);
             _dbContext.SaveChanges();

@@ -23,8 +23,7 @@ namespace GymRatApi.Entieties
         {
             modelBuilder.Entity<BodyPart>(entity =>
             {
-                entity.Property(g => g.HowManyExercisesPerWeek)
-                .IsRequired();
+                entity.Property(g => g.HowManyExercisesPerWeek);
                 entity.Property(g => g.Name)
                 .IsRequired()
                 .HasMaxLength(25);
@@ -42,7 +41,6 @@ namespace GymRatApi.Entieties
                   .WithOne(v => v.Exercise)
                   .HasForeignKey<Video>(v => v.ExerciseId);
                 entity.Property(g => g.Description)
-                .IsRequired()
                 .HasMaxLength(200);
                 entity.HasMany(e => e.Parts)
                 .WithOne(p => p.Exercise);
@@ -54,8 +52,7 @@ namespace GymRatApi.Entieties
 
             modelBuilder.Entity<Sport>(entity =>
             {
-                entity.Property(g => g.Name)
-                .IsRequired();
+                entity.Property(g => g.Name);
                 entity.HasOne(g => g.Exercise)
                 .WithOne(e => e.Sport);
                 
@@ -63,7 +60,8 @@ namespace GymRatApi.Entieties
 
             modelBuilder.Entity<Video>(entity =>
             {
-                entity.Property(g => g.Title)
+                entity.Property(g => g.Title);
+                entity.Property(g => g.Path)
                 .IsRequired();
                 entity.HasOne(g => g.Exercise);
                 
@@ -71,26 +69,19 @@ namespace GymRatApi.Entieties
 
             modelBuilder.Entity<TrainingPart>(entity =>
             {
-                entity.Property(g => g.AmountPart)
-                .IsRequired();
-                entity.Property(g => g.AmountSeries)
-                .IsRequired();
-                entity.Property(g => g.BodyWeight)
-                .IsRequired();
+                entity.Property(g => g.AmountSeries);
+                entity.Property(g => g.BodyWeight);
             });
             modelBuilder.Entity<User>(entity =>
             {
                 entity.Property(g => g.Name)
-                .IsRequired()
                 .HasMaxLength(25);
                 entity.Property(g => g.Password)
                 .IsRequired();
                 entity.Property(g => g.Email)
                 .IsRequired();
-                entity.Property(g => g.CreateAt)
-                .IsRequired();
-                entity.Property(g => g.UpdateAt)
-                .IsRequired();
+                entity.Property(g => g.CreateAt);
+                entity.Property(g => g.UpdateAt);
                 entity.Property(g => g.LastLogin);
              });
                 
