@@ -1,4 +1,5 @@
 ﻿using GymRatApi.Entieties;
+using Microsoft.EntityFrameworkCore;
 
 namespace GymRatApi.Services
 {
@@ -24,10 +25,13 @@ namespace GymRatApi.Services
             _dbContext.SaveChanges();
             return Task.FromResult(newExercise);
         }
-        public Task<List<Exercise>> GetAll () => Task.FromResult(_dbContext.Exercises.ToList());
+        public Task<List<Exercise>> GetAll()
+            => Task.FromResult(_dbContext.Exercises.Include(e => e.Video).ToList());
 
         public Task<Exercise> GetbyName(string name)
         {
+            
+
             var exercise = _dbContext.Exercises.FirstOrDefault(g => g.Name == name);
             if (exercise == null)
             {
@@ -46,5 +50,6 @@ namespace GymRatApi.Services
             _dbContext.SaveChanges();
             return Task.CompletedTask;
         }
+        
     }
 }

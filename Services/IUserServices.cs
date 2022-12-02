@@ -8,5 +8,7 @@ namespace GymRatApi.Services
        Task <List<User>> GetAll();
        Task <User> GetById(int id);
        Task Delete(int id);
+       Task Update(User user);
+        
     }
 }

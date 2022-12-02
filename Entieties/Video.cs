@@ -1,4 +1,6 @@
-﻿namespace GymRatApi.Entieties
+﻿using System.Text.Json.Serialization;
+
+namespace GymRatApi.Entieties
 {
     public class Video
     {

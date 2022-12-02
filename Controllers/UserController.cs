@@ -68,5 +68,23 @@ namespace GymRatApi.Controllers
                 return NotFound(ex.Message);
             }
         }
+        [HttpPatch]
+
+        public async Task<ActionResult> Update([FromRoute]User user)
+        {
+            try
+            {
+                if (user == null)
+                {
+                    return BadRequest("User does not exist");
+                }
+                await _userServices.Update(user);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
     }
 }

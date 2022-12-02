@@ -49,5 +49,11 @@ namespace GymRatApi.Services
             return Task.CompletedTask;
         }
 
+        public Task Update(User user)
+        {
+            _dbContext.Update(user);
+            _dbContext.SaveChanges();
+            return Task.CompletedTask;
+        }
     }
 }
