@@ -23,7 +23,11 @@ builder.Services.AddDbContext<GymDbContext>(o =>
 builder.Services.AddScoped<IUserServices,UserServices>();
 builder.Services.AddScoped<IExerciseServices,ExerciseServices>();
 builder.Services.AddScoped<IVideoServices,VideoServices>();
-
+builder.Services.AddScoped<IBodyPartService, BodyPartService>();
+builder.Services.AddScoped<ISportServices, SportServices>();
+builder.Services.AddScoped<ITrainingPartServices, TrainingPartService>();
+builder.Services.AddScoped<ITrainingService, TrainingService>();
+builder.Services.AddScoped<ITrainingScheuldeService, TrainingScheuldeService>();
 
 
 var app = builder.Build();
@@ -31,6 +35,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+
     app.UseSwagger();
     app.UseSwaggerUI(ui => {
         ui.DefaultModelRendering(Swashbuckle.AspNetCore.SwaggerUI.ModelRendering.Model);

@@ -17,10 +17,35 @@ namespace GymRatApi.Entieties
         public DbSet<TrainingPart> TrainingParts { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Video> Videos { get; set; }
+        public DbSet<Training> Training { get; set; }
+        public DbSet<TrainingScheulde> TrainingScheulde { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            
+
+            modelBuilder.Entity<Exercise>(entity =>
+            {
+                entity.HasKey(g => g.Id);
+                entity.Property(g => g.Name)
+                .IsRequired()
+                .HasMaxLength(50);
+                entity.Property(g => g.Description)
+                .HasMaxLength(200);
+                entity.HasOne(g => g.Video)
+                  .WithOne(v => v.Exercise)
+                  .HasForeignKey<Video>(v => v.ExerciseId);
+                entity.HasMany(e => e.BodyParts)
+                .WithOne(p => p.Exercise);
+                entity.HasOne(b => b.Sport)
+                .WithOne(i => i.Exercise)
+                .HasForeignKey<Sport>(b => b.ExerciseId);
+                entity.HasOne(g => g.TrainingPart)
+                .WithOne(tp => tp.Exercise)
+                .HasForeignKey<TrainingPart>(e => e.ExerciseId);
+            });
+
             modelBuilder.Entity<BodyPart>(entity =>
             {
                 entity.Property(g => g.HowManyExercisesPerWeek);
@@ -28,26 +53,8 @@ namespace GymRatApi.Entieties
                 .IsRequired()
                 .HasMaxLength(25);
                 entity.HasOne(e => e.Exercise)
-                .WithMany(p => p.Parts)
+                .WithMany(p => p.BodyParts)
                 .HasForeignKey(e => e.ExerciseId);
-            });
-
-            modelBuilder.Entity<Exercise>(entity =>
-            {
-                entity.Property(g => g.Name)
-                .IsRequired()
-                .HasMaxLength(50);
-                entity.HasOne(g => g.Video)
-                  .WithOne(v => v.Exercise)
-                  .HasForeignKey<Video>(v => v.ExerciseId);
-                entity.Property(g => g.Description)
-                .HasMaxLength(200);
-                entity.HasMany(e => e.Parts)
-                .WithOne(p => p.Exercise);
-                entity.HasOne(b => b.Sport)
-                .WithOne(i => i.Exercise)
-                .HasForeignKey<Sport>(b => b.ExerciseId);
-
             });
 
             modelBuilder.Entity<Sport>(entity =>
@@ -69,8 +76,17 @@ namespace GymRatApi.Entieties
 
             modelBuilder.Entity<TrainingPart>(entity =>
             {
+                entity.HasOne(g => g.Exercise).WithOne(g => g.TrainingPart)
+                .HasForeignKey<TrainingPart>(t => t.ExerciseId);
+
+                entity.HasOne(g => g.Training)
+                .WithMany(t => t.TrainingParts)
+                .HasForeignKey(tp => tp.TrainingId);
+
+                entity.Property(g => g.BreakBetweenSeries);
                 entity.Property(g => g.AmountSeries);
                 entity.Property(g => g.BodyWeight);
+                entity.Property(g => g.Reps);
             });
             modelBuilder.Entity<User>(entity =>
             {
@@ -83,8 +99,32 @@ namespace GymRatApi.Entieties
                 entity.Property(g => g.CreateAt);
                 entity.Property(g => g.UpdateAt);
                 entity.Property(g => g.LastLogin);
+                entity.HasOne(t => t.TrainingScheulde)
+                .WithOne(g => g.User)
+                .HasForeignKey<TrainingScheulde>(g => g.UserId);
              });
-                
+            modelBuilder.Entity<Training>(entity =>
+            {
+                entity.Property(g => g.Interval);
+                entity.Property(g => g.TrainingDuration);
+                entity.Property(g => g.TrainingDate)
+                .IsRequired();
+
+                entity.HasMany(g => g.TrainingParts)
+                .WithOne(t => t.Training);
+                entity.HasOne(t => t.TrainingScheulde)
+                .WithMany(g => g.Trainings)
+                .HasForeignKey(t => t.TrainingScheuldeId);
+            });
+            modelBuilder.Entity<TrainingScheulde>(entity =>
+            {
+                entity.HasOne(g => g.User)
+                .WithOne(u => u.TrainingScheulde)
+                .HasForeignKey<User>(tr => tr.TrainingScheuldeId);
+                entity.HasMany(g => g.Trainings)
+                .WithOne(t => t.TrainingScheulde)
+                .HasForeignKey(g => g.TrainingScheuldeId);
+            });
         }
         
 

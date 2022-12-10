@@ -3,6 +3,7 @@ using System;
 using GymRatApi.Entieties;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GymRatApi.Migrations
 {
     [DbContext(typeof(GymDbContext))]
-    partial class GymDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221210225242_add-key-")]
+    partial class addkey
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.0");
@@ -138,8 +141,7 @@ namespace GymRatApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ExerciseId")
-                        .IsUnique();
+                    b.HasIndex("ExerciseId");
 
                     b.HasIndex("TrainingId");
 
@@ -260,8 +262,8 @@ namespace GymRatApi.Migrations
             modelBuilder.Entity("GymRatApi.Entieties.TrainingPart", b =>
                 {
                     b.HasOne("GymRatApi.Entieties.Exercise", "Exercise")
-                        .WithOne("TrainingPart")
-                        .HasForeignKey("GymRatApi.Entieties.TrainingPart", "ExerciseId")
+                        .WithMany()
+                        .HasForeignKey("ExerciseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -303,9 +305,6 @@ namespace GymRatApi.Migrations
                     b.Navigation("BodyParts");
 
                     b.Navigation("Sport")
-                        .IsRequired();
-
-                    b.Navigation("TrainingPart")
                         .IsRequired();
 
                     b.Navigation("Video")

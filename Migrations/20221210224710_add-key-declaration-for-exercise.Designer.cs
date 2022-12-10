@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GymRatApi.Migrations
 {
     [DbContext(typeof(GymDbContext))]
-    [Migration("20221201210646_update relation video-exercise")]
-    partial class updaterelationvideoexercise
+    [Migration("20221210224710_add-key-declaration-for-exercise")]
+    partial class addkeydeclarationforexercise
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -60,12 +60,7 @@ namespace GymRatApi.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("TrainingPartId")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("TrainingPartId");
 
                     b.ToTable("Exercises");
                 });
@@ -91,13 +86,39 @@ namespace GymRatApi.Migrations
                     b.ToTable("Sports");
                 });
 
-            modelBuilder.Entity("GymRatApi.Entieties.TrainingPart", b =>
+            modelBuilder.Entity("GymRatApi.Entieties.Training", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("AmountPart")
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Interval")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("TrainingDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("TrainingDuration")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("TrainingScheuldeId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TrainingScheuldeId");
+
+                    b.ToTable("Training");
+                });
+
+            modelBuilder.Entity("GymRatApi.Entieties.TrainingPart", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("AmountSeries")
@@ -106,9 +127,40 @@ namespace GymRatApi.Migrations
                     b.Property<int>("BodyWeight")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("BreakBetweenSeries")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ExerciseId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Reps")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TrainingId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("ExerciseId")
+                        .IsUnique();
+
+                    b.HasIndex("TrainingId");
+
                     b.ToTable("TrainingParts");
+                });
+
+            modelBuilder.Entity("GymRatApi.Entieties.TrainingScheulde", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TrainingScheulde");
                 });
 
             modelBuilder.Entity("GymRatApi.Entieties.User", b =>
@@ -136,10 +188,16 @@ namespace GymRatApi.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("TrainingScheuldeId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime>("UpdateAt")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("TrainingScheuldeId")
+                        .IsUnique();
 
                     b.ToTable("Users");
                 });
@@ -172,19 +230,12 @@ namespace GymRatApi.Migrations
             modelBuilder.Entity("GymRatApi.Entieties.BodyPart", b =>
                 {
                     b.HasOne("GymRatApi.Entieties.Exercise", "Exercise")
-                        .WithMany("Parts")
+                        .WithMany("BodyParts")
                         .HasForeignKey("ExerciseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Exercise");
-                });
-
-            modelBuilder.Entity("GymRatApi.Entieties.Exercise", b =>
-                {
-                    b.HasOne("GymRatApi.Entieties.TrainingPart", null)
-                        .WithMany("Exercise")
-                        .HasForeignKey("TrainingPartId");
                 });
 
             modelBuilder.Entity("GymRatApi.Entieties.Sport", b =>
@@ -196,6 +247,47 @@ namespace GymRatApi.Migrations
                         .IsRequired();
 
                     b.Navigation("Exercise");
+                });
+
+            modelBuilder.Entity("GymRatApi.Entieties.Training", b =>
+                {
+                    b.HasOne("GymRatApi.Entieties.TrainingScheulde", "TrainingScheulde")
+                        .WithMany("Trainings")
+                        .HasForeignKey("TrainingScheuldeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TrainingScheulde");
+                });
+
+            modelBuilder.Entity("GymRatApi.Entieties.TrainingPart", b =>
+                {
+                    b.HasOne("GymRatApi.Entieties.Exercise", "Exercise")
+                        .WithOne("TrainingPart")
+                        .HasForeignKey("GymRatApi.Entieties.TrainingPart", "ExerciseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GymRatApi.Entieties.Training", "Training")
+                        .WithMany("TrainingParts")
+                        .HasForeignKey("TrainingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Exercise");
+
+                    b.Navigation("Training");
+                });
+
+            modelBuilder.Entity("GymRatApi.Entieties.User", b =>
+                {
+                    b.HasOne("GymRatApi.Entieties.TrainingScheulde", "TrainingScheulde")
+                        .WithOne("User")
+                        .HasForeignKey("GymRatApi.Entieties.User", "TrainingScheuldeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TrainingScheulde");
                 });
 
             modelBuilder.Entity("GymRatApi.Entieties.Video", b =>
@@ -211,18 +303,29 @@ namespace GymRatApi.Migrations
 
             modelBuilder.Entity("GymRatApi.Entieties.Exercise", b =>
                 {
-                    b.Navigation("Parts");
+                    b.Navigation("BodyParts");
 
                     b.Navigation("Sport")
+                        .IsRequired();
+
+                    b.Navigation("TrainingPart")
                         .IsRequired();
 
                     b.Navigation("Video")
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("GymRatApi.Entieties.TrainingPart", b =>
+            modelBuilder.Entity("GymRatApi.Entieties.Training", b =>
                 {
-                    b.Navigation("Exercise");
+                    b.Navigation("TrainingParts");
+                });
+
+            modelBuilder.Entity("GymRatApi.Entieties.TrainingScheulde", b =>
+                {
+                    b.Navigation("Trainings");
+
+                    b.Navigation("User")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
