@@ -1,4 +1,5 @@
-﻿using GymRatApi.Entieties;
+﻿using GymRatApi.ContractModules;
+using GymRatApi.Entieties;
 
 namespace GymRatApi.Services
 {
@@ -8,22 +9,22 @@ namespace GymRatApi.Services
             : base(dbContext) 
         {
         }
-        public Task<Sport> Create(string name, int exerciseId)
+        public Task<Sport> Create(CreateSportContract createSportContract)
         {
-            if (string.IsNullOrEmpty(name) || exerciseId < 0)
+            if (createSportContract == null)
             {
-                throw new ArgumentNullException("Name is empty");
+                throw new ArgumentNullException("CreateSportContract is empty");
             }
 
-            var rootExercise = _dbContext.Exercises.FirstOrDefault(ex => ex.Id == exerciseId);
+            var rootExercise = _dbContext.Exercises.FirstOrDefault(ex => ex.Id == createSportContract.ExerciseId);
             if (rootExercise == null)
             {
-                throw new Exception($"Exercise with id: {exerciseId} does not exist");
+                throw new Exception($"Exercise with id: {createSportContract.ExerciseId} does not exist");
             }
 
             var newSport = new Sport();
-            newSport.Name = name;
-            newSport.ExerciseId = exerciseId;
+            newSport.Name = createSportContract.Name;
+            newSport.ExerciseId = createSportContract.ExerciseId;
             newSport.Exercise = rootExercise;
             _dbContext.Add(newSport);
             _dbContext.SaveChanges();
@@ -51,9 +52,9 @@ namespace GymRatApi.Services
             _dbContext.SaveChanges();
             return Task.CompletedTask;
         }
-        public Task Update(Sport sport)
+        public Task Update(CreateSportContract createSportContract)
         {
-            _dbContext.Update(sport);
+            _dbContext.Update(createSportContract);
             _dbContext.SaveChanges();
             return Task.CompletedTask;
 

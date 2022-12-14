@@ -8,7 +8,7 @@
         public int Id { get; set; }
         public string Description { get; set; } //Plecy + klata
         public DateTime TrainingDate { get; set; }
-        public DateTime TrainingDuration { get; set; }
+        public int TrainingDuration { get; set; }
         public int Interval { get; set; } // co ile idni
         public int TrainingScheuldeId { get; set; }
         public TrainingScheulde TrainingScheulde { get; set; }

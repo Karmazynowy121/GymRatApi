@@ -25,9 +25,7 @@ namespace GymRatApi.Controllers
                 {
                     return BadRequest();
                 }
-                var newVideo = _videoServices.Create(createBaseVideoContract.Title,
-                    createBaseVideoContract.Path,
-                    createBaseVideoContract.ExerciseId);
+                var newVideo = _videoServices.Create(createBaseVideoContract);
                 return Ok(newVideo);
             }
             catch (Exception ex)

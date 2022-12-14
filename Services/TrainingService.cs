@@ -11,22 +11,20 @@ namespace GymRatApi.Services
         {
         }
 
-        public Task<Training> Create(List<CreateTrainingPartContract> trainingPart, string description, DateTime trainingDate, int interval)
+        public Task<Training> Create(CreateTrainingContract createTrainingContract)
         {
-            if (trainingPart == null)
+            if (createTrainingContract == null)
             {
-                throw new ArgumentNullException("trainingPart is empty");
+                throw new ArgumentNullException("CreateTrainingContract is empty");
             }
             var newTraining = new Training();
-            newTraining.Description = description;
-            newTraining.TrainingDate = trainingDate;
-            newTraining.Interval = interval;
+            newTraining.Description = createTrainingContract.Description;
+            newTraining.TrainingDate = createTrainingContract.TrainingDate;
+            newTraining.Interval = createTrainingContract.Interval;
+            newTraining.TrainingDuration = createTrainingContract.TrainingDuration;
             _dbContext.Add(newTraining);
             _dbContext.SaveChanges();
-            newTraining.TrainingParts = trainingPart.ToTrainigPartList(newTraining.Id);
-            _dbContext.Update(newTraining);
             return Task.FromResult(newTraining);
-
         }
     }
 }

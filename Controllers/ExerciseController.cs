@@ -18,8 +18,7 @@ namespace GymRatApi.Controllers
         [HttpPut]
         public async Task <IActionResult> CreateExercise([FromBody] CreateExerciseContract createExerciseContract)
         {
-            var newExercise = await _exerciseServices.Create(createExerciseContract.Name,
-                    createExerciseContract.Descritpion);
+            var newExercise = await _exerciseServices.Create(createExerciseContract);
             return Ok(newExercise);
         }
         [HttpGet]

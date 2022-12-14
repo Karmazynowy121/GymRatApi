@@ -19,7 +19,7 @@ namespace GymRatApi.Entieties
         public DbSet<Video> Videos { get; set; }
         public DbSet<Training> Training { get; set; }
         public DbSet<TrainingScheulde> TrainingScheulde { get; set; }
-
+        public DbSet<UserTrainingScheulde> UserTrainingScheuldes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -99,9 +99,9 @@ namespace GymRatApi.Entieties
                 entity.Property(g => g.CreateAt);
                 entity.Property(g => g.UpdateAt);
                 entity.Property(g => g.LastLogin);
-                entity.HasOne(t => t.TrainingScheulde)
+                entity.HasMany(t => t.TrainingScheuldes)
                 .WithOne(g => g.User)
-                .HasForeignKey<TrainingScheulde>(g => g.UserId);
+                .HasForeignKey(g => g.UserId);
              });
             modelBuilder.Entity<Training>(entity =>
             {
@@ -120,11 +120,22 @@ namespace GymRatApi.Entieties
             {
                 entity.HasOne(g => g.User)
                 .WithOne(u => u.TrainingScheulde)
-                .HasForeignKey<User>(tr => tr.TrainingScheuldeId);
+                .HasForeignKey<UserTrainingScheulde>(tr => tr.UserId);
                 entity.HasMany(g => g.Trainings)
                 .WithOne(t => t.TrainingScheulde)
                 .HasForeignKey(g => g.TrainingScheuldeId);
             });
+
+            modelBuilder.Entity<UserTrainingScheulde>(entity =>
+            {
+                entity.HasOne(g => g.User)
+                .WithMany(u => u.TrainingScheuldes)
+                .HasForeignKey(t => t.UserId);
+                entity.HasOne(g => g.TrainingScheulde)
+                .WithOne(t => t.User)
+                .HasForeignKey<UserTrainingScheulde>(u => u.TrainingScheuldeId);
+            });
+
         }
         
 

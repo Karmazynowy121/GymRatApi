@@ -1,4 +1,5 @@
-﻿using GymRatApi.Entieties;
+﻿using GymRatApi.ContractModules;
+using GymRatApi.Entieties;
 
 namespace GymRatApi.Services
 {
@@ -8,24 +9,24 @@ namespace GymRatApi.Services
             : base(dbContext)
         {
         }
-        public Task<Video> Create (string title, string path, int exerciseId)
+        public Task<Video> Create(CreateBaseVideoContract createBaseVideoContract)
         {
-            if (string.IsNullOrEmpty(title) || string.IsNullOrEmpty(path) || exerciseId < 0)
+            if (createBaseVideoContract == null)
             {
-                throw new ArgumentNullException("Title Or Path is empty");
+                throw new ArgumentNullException("CreateBaseVideoContract is empty");
             }
 
-            var rootExercise = _dbContext.Exercises.FirstOrDefault(ex => ex.Id == exerciseId);
+            var rootExercise = _dbContext.Exercises.FirstOrDefault(ex => ex.Id == createBaseVideoContract.ExerciseId);
 
             if (rootExercise == null)
             {
-                throw new Exception($"Exercise with id: {exerciseId} does not exist");
+                throw new Exception($"Exercise with id: {createBaseVideoContract.ExerciseId} does not exist");
             }
 
             var newVideo = new Video();
-            newVideo.Title = title;
-            newVideo.Path = path;
-            newVideo.ExerciseId = exerciseId;
+            newVideo.Title = createBaseVideoContract.Title;
+            newVideo.Path = createBaseVideoContract.Path;
+            newVideo.ExerciseId = createBaseVideoContract.ExerciseId;
             newVideo.Exercise = rootExercise;
             _dbContext.Add(newVideo);
             _dbContext.SaveChanges();

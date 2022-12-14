@@ -1,4 +1,5 @@
-﻿using GymRatApi.Entieties;
+﻿using GymRatApi.ContractModules;
+using GymRatApi.Entieties;
 
 namespace GymRatApi.Services
 {
@@ -9,22 +10,22 @@ namespace GymRatApi.Services
         {
         }
 
-        public Task<BodyPart>Create (string name, int howManyExercisePerWeek, int exerciseId)
+        public Task<BodyPart>Create (CreateBodyPartContract createBodyPartContract)
         {
-            if (string.IsNullOrEmpty(name) || howManyExercisePerWeek < 0|| exerciseId < 0)
+            if (createBodyPartContract == null)
             {
-                throw new ArgumentException("Name or ExercisePerWeek is empty");
+                throw new ArgumentException("createBodyPartContract is empty");
             }
-            var rootExercise = _dbContext.Exercises.FirstOrDefault(ex => ex.Id == exerciseId);
+            var rootExercise = _dbContext.Exercises.FirstOrDefault(ex => ex.Id == createBodyPartContract.ExerciseId);
 
             if (rootExercise == null)
             {
-                throw new Exception($"Exercise with id: {exerciseId} does not exist");
+                throw new Exception($"Exercise with id: {createBodyPartContract.ExerciseId} does not exist");
             }
             var newBodyPart = new BodyPart();
-            newBodyPart.Name = name;
-            newBodyPart.HowManyExercisesPerWeek = howManyExercisePerWeek;
-            newBodyPart.ExerciseId = exerciseId;
+            newBodyPart.Name = createBodyPartContract.Name;
+            newBodyPart.HowManyExercisesPerWeek = createBodyPartContract.HowManyExercisePerWeek;
+            newBodyPart.ExerciseId = createBodyPartContract.ExerciseId;
             newBodyPart.Exercise = rootExercise;
             _dbContext.Add(newBodyPart);
             _dbContext.SaveChanges();

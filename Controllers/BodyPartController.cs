@@ -24,9 +24,7 @@ namespace GymRatApi.Controllers
                 {
                     return BadRequest();
                 }
-                var newBodyPart = await _bodyPartService.Create(createBodyPartContract.Name,
-                    createBodyPartContract.HowManyExercisePerWeek,
-                    createBodyPartContract.ExerciseId);
+                var newBodyPart = await _bodyPartService.Create(createBodyPartContract);
                 return Ok(newBodyPart);
             }
             catch (Exception ex)

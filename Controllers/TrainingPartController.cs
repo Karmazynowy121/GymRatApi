@@ -24,12 +24,7 @@ namespace GymRatApi.Controllers
                 {
                     return BadRequest();
                 }
-                var newTrainingPart = _trainingPartServices.Create(createTrainingPartContract.AmountSeries,
-                    createTrainingPartContract.BodyWeight,
-                    createTrainingPartContract.Reps,
-                    createTrainingPartContract.BreakBetweenSeries,
-                    createTrainingPartContract.TrainingId,
-                    createTrainingPartContract.ExerciseId); 
+                var newTrainingPart = _trainingPartServices.Create(createTrainingPartContract); 
                 return Ok(newTrainingPart);
             }
             catch (Exception ex)

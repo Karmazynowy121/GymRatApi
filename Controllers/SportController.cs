@@ -24,8 +24,7 @@ namespace GymRatApi.Controllers
                 {
                     return BadRequest();
                 }
-                var newSport = await _sportServices.Create(createSportContract.Name,
-                    createSportContract.ExerciseId);
+                var newSport = await _sportServices.Create(createSportContract);
                 return Ok(newSport);
             }
             catch (Exception ex)
@@ -73,15 +72,15 @@ namespace GymRatApi.Controllers
             }
         }
         [HttpPatch]
-        public async Task<ActionResult> Update([FromRoute] Sport sport)
+        public async Task<ActionResult> Update([FromRoute] CreateSportContract createSportContract)
         {
             try
             {
-                if (sport == null)
+                if (createSportContract == null)
                 {
                     return BadRequest("sport is invalid, is null");
                 }
-                await _sportServices.Update(sport);
+                await _sportServices.Update(createSportContract);
                 return Ok();
             }
             catch (Exception ex)

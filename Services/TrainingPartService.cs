@@ -1,4 +1,5 @@
-﻿using GymRatApi.Entieties;
+﻿using GymRatApi.ContractModules;
+using GymRatApi.Entieties;
 
 namespace GymRatApi.Services
 {
@@ -9,33 +10,33 @@ namespace GymRatApi.Services
         {
         }
 
-        public Task<TrainingPart> Create(int amountSeries, int bodyWeight,int reps,int breakBetweenSeries, int exerciseId, int trainingId)
+        public Task<TrainingPart> Create(CreateTrainingPartContract createTrainingPartContract)
         {
-            if (amountSeries< 0 || bodyWeight < 0 || reps < 0 || exerciseId < 0)
+            if (createTrainingPartContract == null)
             {
-                throw new ArgumentNullException("AmountSeries or BodyWeight is empty");
+                throw new ArgumentNullException("CreateTrainingPartContract is empty");
             }
-            var rootTraining = _dbContext.Training.FirstOrDefault(t => t.Id == trainingId);
+            var rootTraining = _dbContext.Training.FirstOrDefault(t => t.Id == createTrainingPartContract.TrainingId);
 
             if (rootTraining == null)
             {
-                throw new Exception($"Training with id: {trainingId} does not exist");
+                throw new Exception($"Training with id: {createTrainingPartContract.TrainingId} does not exist");
             }
-            var rootExercise = _dbContext.Exercises.FirstOrDefault(ex => ex.Id == exerciseId);
+            var rootExercise = _dbContext.Exercises.FirstOrDefault(ex => ex.Id == createTrainingPartContract.ExerciseId);
 
             if (rootExercise == null)
             {
-                throw new Exception($"Exercise with id: {exerciseId} does not exist");
+                throw new Exception($"Exercise with id: {createTrainingPartContract.ExerciseId} does not exist");
             }
 
             var newTrainingPart = new TrainingPart();
-            newTrainingPart.AmountSeries = amountSeries;
-            newTrainingPart.BodyWeight = bodyWeight;
-            newTrainingPart.Reps = reps;
-            newTrainingPart.BreakBetweenSeries = breakBetweenSeries;
-            newTrainingPart.ExerciseId = exerciseId;
+            newTrainingPart.AmountSeries = createTrainingPartContract.AmountSeries;
+            newTrainingPart.BodyWeight = createTrainingPartContract.BodyWeight;
+            newTrainingPart.Reps = createTrainingPartContract.Reps;
+            newTrainingPart.BreakBetweenSeries = createTrainingPartContract.BreakBetweenSeries;
+            newTrainingPart.ExerciseId = createTrainingPartContract.ExerciseId;
             newTrainingPart.Exercise = rootExercise;
-            newTrainingPart.TrainingId = trainingId;
+            newTrainingPart.TrainingId = createTrainingPartContract.TrainingId;
             newTrainingPart.Training = rootTraining;
             _dbContext.Add(newTrainingPart);
             _dbContext.SaveChanges();

@@ -1,5 +1,6 @@
 ﻿using GymRatApi.Entieties;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace GymRatApi.Services
 {
@@ -10,7 +11,7 @@ namespace GymRatApi.Services
             : base(dbContext)
         {   
         }
-        public Task<User> Create(string name, string email, string password)
+        public Task<User> Create(string email,string password, string name)
         {
             if (string.IsNullOrEmpty(email)||string.IsNullOrEmpty(password)||string.IsNullOrEmpty(name))
             {
@@ -27,15 +28,18 @@ namespace GymRatApi.Services
             return Task.FromResult(newUser);
         }
         public Task <List<User>> GetAll() =>Task.FromResult(_dbContext.Users.ToList());
-        public Task<User> GetById(int id)
+        public async Task<User> GetById(int id)
         {
 
-            var user = _dbContext.Users.FirstOrDefault(g => g.Id == id);
+            var user = await _dbContext.Users.Where(g => g.Id == id)
+                .Include(u => u.TrainingScheuldes)
+                .ThenInclude(uts => uts.TrainingScheulde)
+                .ThenInclude(ts => ts.Trainings).FirstOrDefaultAsync();
             if (user is null)
             {
                 throw new Exception($"user {id} not found");
             }
-            return Task.FromResult(user);   
+            return user;   
         }
         public Task Delete(int id)
         {

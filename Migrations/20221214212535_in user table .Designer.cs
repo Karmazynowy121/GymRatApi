@@ -3,6 +3,7 @@ using System;
 using GymRatApi.Entieties;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GymRatApi.Migrations
 {
     [DbContext(typeof(GymDbContext))]
-    partial class GymDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221214212535_in user table ")]
+    partial class inusertable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.0");
@@ -208,10 +211,8 @@ namespace GymRatApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TrainingScheuldeId")
+                    b.HasIndex("UserId")
                         .IsUnique();
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("UserTrainingScheuldes");
                 });
@@ -297,7 +298,7 @@ namespace GymRatApi.Migrations
                 {
                     b.HasOne("GymRatApi.Entieties.TrainingScheulde", "TrainingScheulde")
                         .WithOne("User")
-                        .HasForeignKey("GymRatApi.Entieties.UserTrainingScheulde", "TrainingScheuldeId")
+                        .HasForeignKey("GymRatApi.Entieties.UserTrainingScheulde", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

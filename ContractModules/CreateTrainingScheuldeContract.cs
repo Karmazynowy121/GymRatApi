@@ -1,11 +1,8 @@
-﻿using GymRatApi.Entieties;
-
-namespace GymRatApi.ContractModules
+﻿namespace GymRatApi.ContractModules
 {
     public class CreateTrainingScheuldeContract
     {
-        public User User { get; set; }
-        public List<Training> Training;
-
+        public string Name { get; set; }
+        public int UserId { get; set; }
     }
 }

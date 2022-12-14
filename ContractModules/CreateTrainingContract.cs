@@ -4,9 +4,9 @@ namespace GymRatApi.ContractModules
 {
     public class CreateTrainingContract
     {
-        public List<CreateTrainingPartContract> TrainingParts { get; set; }
         public string Description { get; set; }
         public DateTime TrainingDate { get; set; }
         public int Interval { get; set; }
+        public int TrainingDuration { get; set; } = 0;
     }
 }

@@ -1,4 +1,5 @@
-﻿using GymRatApi.Entieties;
+﻿using GymRatApi.ContractModules;
+using GymRatApi.Entieties;
 using Microsoft.EntityFrameworkCore;
 
 namespace GymRatApi.Services
@@ -10,17 +11,15 @@ namespace GymRatApi.Services
         {
         }
 
-        public Task<Exercise> Create(string name, string description)
+        public Task<Exercise> Create(CreateExerciseContract createExerciseContract)
         {
-            if (string.IsNullOrEmpty(name))
+            if (createExerciseContract == null)
             {
-                throw new ArgumentNullException("name/video/bodyParts is null");
+                throw new ArgumentNullException("CreateExerciseContract is null");
             }
-            var newExercise = new Exercise() 
-            { 
-              Description = description,
-              Name = name
-            };
+            var newExercise = new Exercise();
+            newExercise.Description = createExerciseContract.Description;
+            newExercise.Name = createExerciseContract.Name;
             _dbContext.Add(newExercise);
             _dbContext.SaveChanges();
             return Task.FromResult(newExercise);

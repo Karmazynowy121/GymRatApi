@@ -22,10 +22,7 @@ namespace GymRatApi.Controllers
                 {
                     return BadRequest();
                 }
-                var newTraining = await _trainingService.Create(createTrainingContract.TrainingParts,
-                    createTrainingContract.Description,
-                    createTrainingContract.TrainingDate,
-                    createTrainingContract.Interval);
+                var newTraining = await _trainingService.Create(createTrainingContract);
                 return Ok(newTraining);
             }
             catch (Exception ex)
