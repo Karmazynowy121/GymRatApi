@@ -9,7 +9,7 @@ namespace GymRatApi.Services
         
         public UserServices(GymDbContext dbContext)
             : base(dbContext)
-        {   
+        {      
         }
         public Task<User> Create(string email,string password, string name)
         {
