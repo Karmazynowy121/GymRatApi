@@ -1,6 +1,6 @@
-﻿namespace GymRatApi.Dto
+﻿namespace GymRatApi.Commands
 {
-    public class TrainingScheuldeDto 
+    public class TrainingScheuldeUpdateCommand
     {
         public string Name { get; set; }
         public int UserId { get; set; }

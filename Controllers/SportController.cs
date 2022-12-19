@@ -1,5 +1,4 @@
-﻿using GymRatApi.Commands.SportCommands;
-using GymRatApi.Dto;
+﻿using GymRatApi.ContractModules;
 using GymRatApi.Entieties;
 using GymRatApi.Services;
 using Microsoft.AspNetCore.Mvc;
