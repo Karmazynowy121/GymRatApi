@@ -1,13 +1,14 @@
-﻿using GymRatApi.ContractModules;
+﻿using GymRatApi.Commands.ExerciseCommands;
+using GymRatApi.Dto;
 using GymRatApi.Entieties;
 
 namespace GymRatApi.Services
 {
     public interface IExerciseServices
     {
-      Task<Exercise> Create(CreateExerciseContract createExerciseContract);
-      Task<List<Exercise>> GetAll();
-      Task<Exercise> GetbyName(string name);
+      Task<ExerciseDto> Create(ExerciseCreateCommand exerciseCreateCommand);
+      Task<List<ExerciseDto>> GetAll();
+      Task<ExerciseDto> GetbyName(string name);
       Task Delete(int id);
     }
 }

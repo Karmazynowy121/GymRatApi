@@ -1,4 +1,6 @@
-﻿using GymRatApi.ContractModules;
+﻿using AutoMapper;
+using GymRatApi.Commands.TrainingScheuldeCommands;
+using GymRatApi.Dto;
 using GymRatApi.Entieties;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,19 +8,21 @@ namespace GymRatApi.Services
 {
     public class TrainingScheuldeService :BaseServices, ITrainingScheuldeService
     {
-        public TrainingScheuldeService(GymDbContext dbContext)
+        private readonly IMapper _mapper;
+        public TrainingScheuldeService(GymDbContext dbContext, IMapper mapper)
             : base(dbContext)
         {
+            _mapper = mapper;
         }
 
-        public async Task<TrainingScheulde> Create (CreateTrainingScheuldeContract createTrainingScheuldeContract)
+        public async Task<TrainingScheuldeDto> Create (TrainingScheuldeCreateCommand trainingScheuldeCreateCommand)
         {
-            if (createTrainingScheuldeContract == null)
+            if (trainingScheuldeCreateCommand == null)
             {
                 throw new ArgumentNullException("user or training is null");
             }
 
-            var userFormDb = await _dbContext.Users.Where(u => u.Id == createTrainingScheuldeContract.UserId)
+            var userFormDb = await _dbContext.Users.Where(u => u.Id == trainingScheuldeCreateCommand.UserId)
                 .Include(u => u.TrainingScheuldes).ThenInclude(ts => ts.TrainingScheulde).FirstOrDefaultAsync();
 
             if (userFormDb == null)
@@ -28,14 +32,14 @@ namespace GymRatApi.Services
 
             // robimy nowy szablon dla listy treningowej 
             var newTrainingScheulde = new TrainingScheulde();
-            newTrainingScheulde.Name = createTrainingScheuldeContract.Name;
+            newTrainingScheulde.Name = trainingScheuldeCreateCommand.Name;
             _dbContext.Add(newTrainingScheulde);
             _dbContext.SaveChanges();
 
             // jak już mamy liste zrobiona to probujemy utworzyć tablice laczaca
             var newUserTrainingScheulde = new UserTrainingScheulde()
             {
-                UserId = createTrainingScheuldeContract.UserId,
+                UserId = trainingScheuldeCreateCommand.UserId,
                 User = userFormDb,
                 TrainingScheulde = newTrainingScheulde,
                 TrainingScheuldeId = newTrainingScheulde.Id
@@ -49,11 +53,11 @@ namespace GymRatApi.Services
             _dbContext.Update(userFormDb);
             _dbContext.Update(newTrainingScheulde);
            
-            return newTrainingScheulde;
+            return _mapper.Map<TrainingScheuldeDto>(newTrainingScheulde);
         }
-        public Task Update(CreateTrainingScheuldeContract createTrainingScheuldeContract)
+        public Task Update(TrainingScheuldeUpdateCommand trainingScheuldeUpdateCommand)
         {
-            _dbContext.Update(createTrainingScheuldeContract);
+            _dbContext.Update(trainingScheuldeUpdateCommand);
             _dbContext.SaveChanges();
             return Task.CompletedTask;
 
@@ -69,6 +73,7 @@ namespace GymRatApi.Services
             _dbContext.SaveChanges();
             return Task.CompletedTask;
         }
-        public Task<List<TrainingScheulde>> GetAll() => Task.FromResult(_dbContext.TrainingScheulde.ToList());
+        public Task<List<TrainingScheuldeDto>> GetAll() 
+            => Task.FromResult(_mapper.Map <List<TrainingScheuldeDto>>(_dbContext.TrainingScheulde.ToList()));
     }
 }

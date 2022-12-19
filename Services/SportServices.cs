@@ -1,37 +1,42 @@
-﻿using GymRatApi.ContractModules;
+﻿using AutoMapper;
+using GymRatApi.Commands.SportCommands;
+using GymRatApi.Dto;
 using GymRatApi.Entieties;
 
 namespace GymRatApi.Services
 {
     public class SportServices : BaseServices, ISportServices
     {
-        public SportServices(GymDbContext dbContext)
+        private readonly IMapper _mapper;
+        public SportServices(GymDbContext dbContext, IMapper mapper)
             : base(dbContext) 
         {
+            _mapper = mapper;
         }
-        public Task<Sport> Create(CreateSportContract createSportContract)
+        public Task<SportDto> Create(SportCreateCommand createSportCommand)
         {
-            if (createSportContract == null)
+            if (createSportCommand == null)
             {
                 throw new ArgumentNullException("CreateSportContract is empty");
             }
 
-            var rootExercise = _dbContext.Exercises.FirstOrDefault(ex => ex.Id == createSportContract.ExerciseId);
+            var rootExercise = _dbContext.Exercises.FirstOrDefault(ex => ex.Id == createSportCommand.ExerciseId);
             if (rootExercise == null)
             {
-                throw new Exception($"Exercise with id: {createSportContract.ExerciseId} does not exist");
+                throw new Exception($"Exercise with id: {createSportCommand.ExerciseId} does not exist");
             }
 
             var newSport = new Sport();
-            newSport.Name = createSportContract.Name;
-            newSport.ExerciseId = createSportContract.ExerciseId;
+            newSport.Name = createSportCommand.Name;
+            newSport.ExerciseId = createSportCommand.ExerciseId;
             newSport.Exercise = rootExercise;
             _dbContext.Add(newSport);
             _dbContext.SaveChanges();
-            return Task.FromResult(newSport);
+            return Task.FromResult(_mapper.Map<SportDto>(newSport));
         }
-        public Task<List<Sport>> GetAll() => Task.FromResult(_dbContext.Sports.ToList());
-        public Task<Sport> GetById(int id)
+        public Task<List<SportDto>> GetAll() 
+            => Task.FromResult(_mapper.Map<List<SportDto>>(_dbContext.Sports.ToList()));
+        public Task<SportDto> GetById(int id)
         {
 
             var sport = _dbContext.Sports.FirstOrDefault(s => s.Id == id);
@@ -39,7 +44,7 @@ namespace GymRatApi.Services
             {
                 throw new Exception($"sport {id} not found");
             }
-            return Task.FromResult(sport);
+            return Task.FromResult(_mapper.Map<SportDto>(sport));
         }
         public Task Delete(int id)
         {
@@ -52,9 +57,9 @@ namespace GymRatApi.Services
             _dbContext.SaveChanges();
             return Task.CompletedTask;
         }
-        public Task Update(CreateSportContract createSportContract)
+        public Task Update(SportUpdateCommand sportUpdateCommand)
         {
-            _dbContext.Update(createSportContract);
+            _dbContext.Update(sportUpdateCommand);
             _dbContext.SaveChanges();
             return Task.CompletedTask;
 

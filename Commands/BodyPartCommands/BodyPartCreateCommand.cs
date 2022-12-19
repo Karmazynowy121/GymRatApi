@@ -1,6 +1,6 @@
-﻿namespace GymRatApi.ContractModules
+﻿namespace GymRatApi.Commands.BodyPartCommands
 {
-    public class CreateBodyPartContract
+    public class BodyPartCreateCommand
     {
         public string Name { get; set; }
         public int HowManyExercisePerWeek { get; set; }

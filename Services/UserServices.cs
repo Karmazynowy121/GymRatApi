@@ -1,34 +1,38 @@
-﻿using GymRatApi.Entieties;
-using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using GymRatApi.Commands.UserCommands;
+using GymRatApi.Dto;
+using GymRatApi.Entieties;
 using Microsoft.EntityFrameworkCore;
 
 namespace GymRatApi.Services
 {
     public class UserServices : BaseServices,IUserServices
     {
-        
-        public UserServices(GymDbContext dbContext)
+        private readonly IMapper _mapper;   
+        public UserServices(GymDbContext dbContext, IMapper mapper)
             : base(dbContext)
-        {      
-        }
-        public Task<User> Create(string email,string password, string name)
         {
-            if (string.IsNullOrEmpty(email)||string.IsNullOrEmpty(password)||string.IsNullOrEmpty(name))
+            _mapper = mapper;
+        }
+        public Task<UserDto> Create(UserCreateCommand userCreateCommand)
+        {
+            if (userCreateCommand == null)
             {
-                throw new ArgumentNullException("email or password is null");
+                throw new ArgumentNullException("userCreateCommand is null");
             }
             var newUser = new User();
-            newUser.Email = email;
-            newUser.Password = password;
-            newUser.Name = name;
+            newUser.Email = userCreateCommand.Email;
+            newUser.Password = userCreateCommand.Password;
+            newUser.Name = userCreateCommand.Name;
             newUser.CreateAt = DateTime.Now;
             newUser.UpdateAt = DateTime.Now;
             _dbContext.Add(newUser);
             _dbContext.SaveChanges();
-            return Task.FromResult(newUser);
+            return Task.FromResult(_mapper.Map<UserDto>(newUser));
         }
-        public Task <List<User>> GetAll() =>Task.FromResult(_dbContext.Users.ToList());
-        public async Task<User> GetById(int id)
+        public Task <List<UserDto>> GetAll() 
+            =>Task.FromResult(_mapper.Map<List<UserDto>>(_dbContext.Users.ToList()));
+        public async Task<UserDto> GetById(int id)
         {
 
             var user = await _dbContext.Users.Where(g => g.Id == id)
@@ -39,7 +43,7 @@ namespace GymRatApi.Services
             {
                 throw new Exception($"user {id} not found");
             }
-            return user;   
+            return _mapper.Map<UserDto>(user);   
         }
         public Task Delete(int id)
         {
@@ -53,9 +57,9 @@ namespace GymRatApi.Services
             return Task.CompletedTask;
         }
 
-        public Task Update(User user)
+        public Task Update(UserUpdateCommand userUpdateCommand)
         {
-            _dbContext.Update(user);
+            _dbContext.Update(userUpdateCommand);
             _dbContext.SaveChanges();
             return Task.CompletedTask;
         }

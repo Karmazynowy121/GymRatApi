@@ -1,4 +1,6 @@
-﻿using GymRatApi.ContractModules;
+﻿using AutoMapper;
+using GymRatApi.Commands.ExerciseCommands;
+using GymRatApi.Dto;
 using GymRatApi.Entieties;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,28 +8,30 @@ namespace GymRatApi.Services
 {
     public class ExerciseServices : BaseServices ,IExerciseServices
     {
-        public ExerciseServices(GymDbContext dbContext) 
+        private readonly IMapper _mapper;
+        public ExerciseServices(GymDbContext dbContext, IMapper mapper) 
             : base(dbContext)
         {
+            _mapper = mapper;
         }
 
-        public Task<Exercise> Create(CreateExerciseContract createExerciseContract)
+        public Task<ExerciseDto> Create(ExerciseCreateCommand exerciseCreateCommand)
         {
-            if (createExerciseContract == null)
+            if (exerciseCreateCommand == null)
             {
                 throw new ArgumentNullException("CreateExerciseContract is null");
             }
             var newExercise = new Exercise();
-            newExercise.Description = createExerciseContract.Description;
-            newExercise.Name = createExerciseContract.Name;
+            newExercise.Description = exerciseCreateCommand.Description;
+            newExercise.Name = exerciseCreateCommand.Name;
             _dbContext.Add(newExercise);
             _dbContext.SaveChanges();
-            return Task.FromResult(newExercise);
+            return Task.FromResult(_mapper.Map<ExerciseDto>(newExercise));
         }
-        public Task<List<Exercise>> GetAll()
-            => Task.FromResult(_dbContext.Exercises.Include(e => e.Video).ToList());
+        public Task<List<ExerciseDto>> GetAll()
+            => Task.FromResult(_mapper.Map<List<ExerciseDto>>(_dbContext.Exercises.Include(e => e.Video).ToList()));
 
-        public Task<Exercise> GetbyName(string name)
+        public Task<ExerciseDto> GetbyName(string name)
         {
             
 
@@ -36,7 +40,7 @@ namespace GymRatApi.Services
             {
                 throw new Exception($"Exercise {name} does not exist");
             }
-            return Task.FromResult(exercise);
+            return Task.FromResult(_mapper.Map<ExerciseDto>(exercise));
         }
         public Task Delete (int id)
         {

@@ -1,48 +1,53 @@
-﻿using GymRatApi.ContractModules;
+﻿using AutoMapper;
+using GymRatApi.Commands.TrainingPartCommands;
+using GymRatApi.Dto;
 using GymRatApi.Entieties;
 
 namespace GymRatApi.Services
 {
     public class TrainingPartService : BaseServices, ITrainingPartServices
     {
-        public TrainingPartService(GymDbContext dbContext)
+        private readonly IMapper _mapper;
+        public TrainingPartService(GymDbContext dbContext, IMapper mapper)
             : base(dbContext)
         {
+            _mapper = mapper;
         }
 
-        public Task<TrainingPart> Create(CreateTrainingPartContract createTrainingPartContract)
+        public Task<TrainingPartDto> Create(TrainingPartCreateCommand trainingPartCreateCommand)
         {
-            if (createTrainingPartContract == null)
+            if (trainingPartCreateCommand == null)
             {
                 throw new ArgumentNullException("CreateTrainingPartContract is empty");
             }
-            var rootTraining = _dbContext.Training.FirstOrDefault(t => t.Id == createTrainingPartContract.TrainingId);
+            var rootTraining = _dbContext.Training.FirstOrDefault(t => t.Id == trainingPartCreateCommand.TrainingId);
 
             if (rootTraining == null)
             {
-                throw new Exception($"Training with id: {createTrainingPartContract.TrainingId} does not exist");
+                throw new Exception($"Training with id: {trainingPartCreateCommand.TrainingId} does not exist");
             }
-            var rootExercise = _dbContext.Exercises.FirstOrDefault(ex => ex.Id == createTrainingPartContract.ExerciseId);
+            var rootExercise = _dbContext.Exercises.FirstOrDefault(ex => ex.Id == trainingPartCreateCommand.ExerciseId);
 
             if (rootExercise == null)
             {
-                throw new Exception($"Exercise with id: {createTrainingPartContract.ExerciseId} does not exist");
+                throw new Exception($"Exercise with id: {trainingPartCreateCommand.ExerciseId} does not exist");
             }
 
             var newTrainingPart = new TrainingPart();
-            newTrainingPart.AmountSeries = createTrainingPartContract.AmountSeries;
-            newTrainingPart.BodyWeight = createTrainingPartContract.BodyWeight;
-            newTrainingPart.Reps = createTrainingPartContract.Reps;
-            newTrainingPart.BreakBetweenSeries = createTrainingPartContract.BreakBetweenSeries;
-            newTrainingPart.ExerciseId = createTrainingPartContract.ExerciseId;
+            newTrainingPart.AmountSeries = trainingPartCreateCommand.AmountSeries;
+            newTrainingPart.BodyWeight = trainingPartCreateCommand.BodyWeight;
+            newTrainingPart.Reps = trainingPartCreateCommand.Reps;
+            newTrainingPart.BreakBetweenSeries = trainingPartCreateCommand.BreakBetweenSeries;
+            newTrainingPart.ExerciseId = trainingPartCreateCommand.ExerciseId;
             newTrainingPart.Exercise = rootExercise;
-            newTrainingPart.TrainingId = createTrainingPartContract.TrainingId;
+            newTrainingPart.TrainingId = trainingPartCreateCommand.TrainingId;
             newTrainingPart.Training = rootTraining;
             _dbContext.Add(newTrainingPart);
             _dbContext.SaveChanges();
-            return Task.FromResult(newTrainingPart);
+            return Task.FromResult(_mapper.Map<TrainingPartDto>(newTrainingPart));
         }
-        public Task<List<TrainingPart>> GetAll() => Task.FromResult(_dbContext.TrainingParts.ToList());
+        public Task<List<TrainingPartDto>> GetAll() 
+            => Task.FromResult(_mapper.Map <List<TrainingPartDto>> (_dbContext.TrainingParts.ToList()));
         public Task Delete(int id)
         {
             var trainingPart = _dbContext
@@ -54,9 +59,9 @@ namespace GymRatApi.Services
             _dbContext.SaveChanges();
             return Task.CompletedTask;
         }
-        public Task Update(TrainingPart trainingPart)
+        public Task Update(TrainingPartUpdateCommand trainingPartUpdateCommand)
         {
-            _dbContext.Update(trainingPart);
+            _dbContext.Update(trainingPartUpdateCommand);
             _dbContext.SaveChanges();
             return Task.CompletedTask;
 

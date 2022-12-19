@@ -1,5 +1,5 @@
-﻿using GymRatApi.ContractModules;
-using GymRatApi.Entieties;
+﻿using GymRatApi.Commands.TrainingScheuldeCommands;
+using GymRatApi.Dto;
 using GymRatApi.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,15 +16,15 @@ namespace GymRatApi.Controllers
             _trainingScheuldeService = trainingScheuldeService;
         }
         [HttpPut]
-        public async Task<IActionResult> CreateTrainingScheulde([FromBody] CreateTrainingScheuldeContract createTrainingScheuldeContract)
+        public async Task<IActionResult> CreateTrainingScheulde([FromBody] TrainingScheuldeCreateCommand trainingScheuldeCreateCommand)
         {
             try
             {
-                if (createTrainingScheuldeContract is null)
+                if (trainingScheuldeCreateCommand is null)
                 {
                     return BadRequest();
                 }
-                var newTrainingScheulde = await _trainingScheuldeService.Create(createTrainingScheuldeContract);
+                var newTrainingScheulde = await _trainingScheuldeService.Create(trainingScheuldeCreateCommand);
                 return Ok(newTrainingScheulde);
             }
             catch (Exception ex)
@@ -33,15 +33,15 @@ namespace GymRatApi.Controllers
             }
         }
         [HttpPatch]
-        public async Task<ActionResult> Update([FromRoute] CreateTrainingScheuldeContract createTrainingScheuldeContract)
+        public async Task<ActionResult> Update([FromRoute] TrainingScheuldeUpdateCommand trainingScheuldeUpdateCommand)
         {
             try
             {
-                if (createTrainingScheuldeContract == null)
+                if (trainingScheuldeUpdateCommand == null)
                 {
                     return BadRequest("User does not exist");
                 }
-                await _trainingScheuldeService.Update(createTrainingScheuldeContract);
+                await _trainingScheuldeService.Update(trainingScheuldeUpdateCommand);
                 return Ok();
             }
             catch (Exception ex)
@@ -54,7 +54,7 @@ namespace GymRatApi.Controllers
         {
             try
             {
-                if (id <= 0)
+                if (id == 0)
                 {
                     return BadRequest();
                 }
@@ -67,7 +67,7 @@ namespace GymRatApi.Controllers
             }
         }
         [HttpGet]
-        public async Task<List<TrainingScheulde>> GetAll()
+        public async Task<List<TrainingScheuldeDto>> GetAll()
         {
             return await _trainingScheuldeService.GetAll();
         }

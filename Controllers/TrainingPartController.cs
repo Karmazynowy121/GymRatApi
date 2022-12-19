@@ -1,4 +1,5 @@
-﻿using GymRatApi.ContractModules;
+﻿using GymRatApi.Commands.TrainingPartCommands;
+using GymRatApi.Dto;
 using GymRatApi.Entieties;
 using GymRatApi.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -16,15 +17,15 @@ namespace GymRatApi.Controllers
             _trainingPartServices = trainingPartServices;
         }
         [HttpPut]
-        public async Task<IActionResult> CreateTraining([FromBody] CreateTrainingPartContract createTrainingPartContract)
+        public async Task<IActionResult> CreateTraining([FromBody] TrainingPartCreateCommand trainingPartCreateCommand)
         {
             try
             {
-                if (createTrainingPartContract is null)
+                if (trainingPartCreateCommand is null)
                 {
                     return BadRequest();
                 }
-                var newTrainingPart = _trainingPartServices.Create(createTrainingPartContract); 
+                var newTrainingPart = _trainingPartServices.Create(trainingPartCreateCommand); 
                 return Ok(newTrainingPart);
             }
             catch (Exception ex)
@@ -33,7 +34,7 @@ namespace GymRatApi.Controllers
             }
         }
         [HttpGet]
-        public async Task<List<TrainingPart>> GetAll()
+        public async Task<List<TrainingPartDto>> GetAll()
         {
             return await _trainingPartServices.GetAll();
         }
@@ -42,7 +43,7 @@ namespace GymRatApi.Controllers
         {
             try
             {
-                if (id <= 0)
+                if (id == 0)
                 {
                     return BadRequest();
                 }
@@ -55,15 +56,15 @@ namespace GymRatApi.Controllers
             }
         }
         [HttpPatch]
-        public async Task<ActionResult> Update([FromRoute] TrainingPart trainingPart)
+        public async Task<ActionResult> Update([FromRoute] TrainingPartUpdateCommand trainingPartUpdateCommand)
         {
             try
             {
-                if (trainingPart == null)
+                if (trainingPartUpdateCommand == null)
                 {
                     return BadRequest("Video is invalid, is null");
                 }
-                await _trainingPartServices.Update(trainingPart);
+                await _trainingPartServices.Update(trainingPartUpdateCommand);
                 return Ok();
             }
             catch (Exception ex)
