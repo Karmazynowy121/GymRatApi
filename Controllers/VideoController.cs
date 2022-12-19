@@ -1,4 +1,5 @@
-﻿using GymRatApi.ContractModules;
+﻿using GymRatApi.Commands;
+using GymRatApi.Dto;
 using GymRatApi.Entieties;
 using GymRatApi.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -17,15 +18,15 @@ namespace GymRatApi.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> CreateVideo([FromBody]CreateBaseVideoContract createBaseVideoContract)
+        public async Task<IActionResult> CreateVideo([FromBody] VideoCreateCommand videoCreateCommand)
         {
             try
             {
-                if (createBaseVideoContract is null)
+                if (videoCreateCommand is null)
                 {
                     return BadRequest();
                 }
-                var newVideo = _videoServices.Create(createBaseVideoContract);
+                var newVideo = _videoServices.Create(videoCreateCommand);
                 return Ok(newVideo);
             }
             catch (Exception ex)
@@ -40,15 +41,15 @@ namespace GymRatApi.Controllers
             return await _videoServices.GetAll();
         }
         [HttpGet("{id}")]
-        public async Task<ActionResult<Video>> Get([FromRoute] int id)
+        public async Task<ActionResult<Video>> Get([FromRoute] VideoGetDto videoGetDto)
         {
             try
             {
-                if (id <= 0)
+                if (videoGetDto is null)
                 {
                     return BadRequest();
                 }
-                return await _videoServices.GetById(id);
+                return await _videoServices.GetById(videoGetDto);
             }
             catch (Exception ex)
             {
@@ -56,15 +57,15 @@ namespace GymRatApi.Controllers
             }
         }
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete([FromRoute] int id)
+        public async Task<ActionResult> Delete([FromRoute] VideoDeleteCommand videoDeleteCommand)
         {
             try
             {
-                if (id <= 0)
+                if (videoDeleteCommand is null)
                 {
                     return BadRequest();
                 }
-                await _videoServices.Delete(id);
+                await _videoServices.Delete(videoDeleteCommand);
                 return Ok();
             }
             catch (Exception ex)
@@ -73,15 +74,15 @@ namespace GymRatApi.Controllers
             }
         }
         [HttpPatch]
-        public async Task<ActionResult> Update([FromRoute]Video video)
+        public async Task<ActionResult> Update([FromRoute]VideoUpdateCommand videoUpdateCommand)
         {
             try
             {
-                if (video == null)
+                if (videoUpdateCommand == null)
                 {
                     return BadRequest("Video is invalid, is null");
                 }
-                await _videoServices.Update(video);
+                await _videoServices.Update(videoUpdateCommand);
                 return Ok();
             }
             catch (Exception ex)

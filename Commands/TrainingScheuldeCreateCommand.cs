@@ -1,6 +1,6 @@
-﻿namespace GymRatApi.ContractModules
+﻿namespace GymRatApi.Commands
 {
-    public class CreateTrainingScheuldeContract
+    public class TrainingScheuldeCreateCommand
     {
         public string Name { get; set; }
         public int UserId { get; set; }

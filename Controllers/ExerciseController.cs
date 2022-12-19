@@ -1,4 +1,5 @@
-﻿using GymRatApi.ContractModules;
+﻿using GymRatApi.Commands;
+using GymRatApi.Dto;
 using GymRatApi.Entieties;
 using GymRatApi.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -16,9 +17,9 @@ namespace GymRatApi.Controllers
         }
 
         [HttpPut]
-        public async Task <IActionResult> CreateExercise([FromBody] CreateExerciseContract createExerciseContract)
+        public async Task <IActionResult> CreateExercise([FromBody] ExerciseCreateCommand exerciseCreateCommand)
         {
-            var newExercise = await _exerciseServices.Create(createExerciseContract);
+            var newExercise = await _exerciseServices.Create(exerciseCreateCommand);
             return Ok(newExercise);
         }
         [HttpGet]
@@ -27,16 +28,16 @@ namespace GymRatApi.Controllers
           return await _exerciseServices.GetAll();
         }
         [HttpGet("{name}")]
-        public async Task <ActionResult<Exercise>> Get([FromRoute]string name)
+        public async Task <ActionResult<Exercise>> Get([FromRoute] ExerciseGetDto exerciseGetDto)
         {
             try
             {
-                if (name == null)
+                if (exerciseGetDto == null)
                 {
                     return BadRequest();
                 }
 
-                return await _exerciseServices.GetbyName(name);
+                return await _exerciseServices.GetbyName(exerciseGetDto);
             }
             catch (Exception ex)
             {
@@ -44,15 +45,15 @@ namespace GymRatApi.Controllers
             }
         }
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete([FromRoute]int id)
+        public async Task<ActionResult> Delete([FromRoute] ExerciseDeleteCommand exerciseDeleteCommand)
         {
             try
             {
-                if (id <= 0)
+                if (exerciseDeleteCommand is null)
                 {
                     return BadRequest();
                 }
-                await _exerciseServices.Delete(id);
+                await _exerciseServices.Delete(exerciseDeleteCommand);
                 return Ok();
             }
             catch (Exception ex)

@@ -1,5 +1,6 @@
-﻿using GymRatApi.Entieties;
-using Microsoft.AspNetCore.Mvc;
+﻿using GymRatApi.Commands;
+using GymRatApi.Dto;
+using GymRatApi.Entieties;
 using Microsoft.EntityFrameworkCore;
 
 namespace GymRatApi.Services
@@ -11,16 +12,16 @@ namespace GymRatApi.Services
             : base(dbContext)
         {      
         }
-        public Task<User> Create(string email,string password, string name)
+        public Task<User> Create(UserCreateCommand userCreateCommand)
         {
-            if (string.IsNullOrEmpty(email)||string.IsNullOrEmpty(password)||string.IsNullOrEmpty(name))
+            if (userCreateCommand == null)
             {
-                throw new ArgumentNullException("email or password is null");
+                throw new ArgumentNullException("userCreateCommand is null");
             }
             var newUser = new User();
-            newUser.Email = email;
-            newUser.Password = password;
-            newUser.Name = name;
+            newUser.Email = userCreateCommand.Email;
+            newUser.Password = userCreateCommand.Password;
+            newUser.Name = userCreateCommand.Name;
             newUser.CreateAt = DateTime.Now;
             newUser.UpdateAt = DateTime.Now;
             _dbContext.Add(newUser);
@@ -28,24 +29,24 @@ namespace GymRatApi.Services
             return Task.FromResult(newUser);
         }
         public Task <List<User>> GetAll() =>Task.FromResult(_dbContext.Users.ToList());
-        public async Task<User> GetById(int id)
+        public async Task<User> GetById(UserGetDto userGetDto)
         {
 
-            var user = await _dbContext.Users.Where(g => g.Id == id)
+            var user = await _dbContext.Users.Where(g => g.Id == userGetDto.Id)
                 .Include(u => u.TrainingScheuldes)
                 .ThenInclude(uts => uts.TrainingScheulde)
                 .ThenInclude(ts => ts.Trainings).FirstOrDefaultAsync();
             if (user is null)
             {
-                throw new Exception($"user {id} not found");
+                throw new Exception($"user {userGetDto} not found");
             }
             return user;   
         }
-        public Task Delete(int id)
+        public Task Delete(UserDeleteCommand userDeleteCommand)
         {
             var user = _dbContext
                 .Users
-                .FirstOrDefault(g => g.Id == id);
+                .FirstOrDefault(g => g.Id == userDeleteCommand.Id);
             if (user == null)
                 throw new Exception("User not found");
             _dbContext.Users.Remove(user);
@@ -53,9 +54,9 @@ namespace GymRatApi.Services
             return Task.CompletedTask;
         }
 
-        public Task Update(User user)
+        public Task Update(UserUpdateCommand userUpdateCommand)
         {
-            _dbContext.Update(user);
+            _dbContext.Update(userUpdateCommand);
             _dbContext.SaveChanges();
             return Task.CompletedTask;
         }

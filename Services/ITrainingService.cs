@@ -1,10 +1,10 @@
-﻿using GymRatApi.ContractModules;
+﻿using GymRatApi.Commands;
 using GymRatApi.Entieties;
 
 namespace GymRatApi.Services
 {
     public interface ITrainingService
     {
-        Task <Training> Create(CreateTrainingContract createTrainingContract);
+        Task <Training> Create(TrainingCreateCommand trainingCreateCommand);
     }
 }

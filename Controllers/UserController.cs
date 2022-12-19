@@ -1,3 +1,5 @@
+using GymRatApi.Commands;
+using GymRatApi.Dto;
 using GymRatApi.Entieties;
 using GymRatApi.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -25,9 +27,9 @@ namespace GymRatApi.Controllers
 
 
         [HttpPut]
-        public async Task<IActionResult> CreateUser([FromBody] string name, string email, string password)
+        public async Task<IActionResult> CreateUser([FromBody] UserCreateCommand userCreateCommand)
         {
-            var newUser = _userServices.Create(name, email, password);
+            var newUser = _userServices.Create(userCreateCommand);
             return Ok(newUser);
         }
         [HttpGet]
@@ -36,15 +38,15 @@ namespace GymRatApi.Controllers
             return await _userServices.GetAll();
         }
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> Get([FromRoute] int id)
+        public async Task<ActionResult<User>> Get([FromRoute] UserGetDto userGetDto)
         {
             try
             {
-                if (id <= 0)
+                if (userGetDto is null)
                 {
                     return BadRequest();
                 }
-                return await _userServices.GetById(id);
+                return await _userServices.GetById(userGetDto);
             }
             catch (Exception ex)
             {
@@ -52,15 +54,15 @@ namespace GymRatApi.Controllers
             }
         }
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete([FromRoute] int id)
+        public async Task<ActionResult> Delete([FromRoute] UserDeleteCommand userDeleteCommand)
         {
             try
             {
-                if (id <= 0)
+                if (userDeleteCommand is null)
                 {
                     return BadRequest();
                 }
-                await _userServices.Delete(id);
+                await _userServices.Delete(userDeleteCommand);
                 return Ok();
             }
             catch (Exception ex)
@@ -70,15 +72,15 @@ namespace GymRatApi.Controllers
         }
         [HttpPatch]
 
-        public async Task<ActionResult> Update([FromRoute]User user)
+        public async Task<ActionResult> Update([FromRoute] UserUpdateCommand userUpdateCommand)
         {
             try
             {
-                if (user == null)
+                if (userUpdateCommand == null)
                 {
                     return BadRequest("User does not exist");
                 }
-                await _userServices.Update(user);
+                await _userServices.Update(userUpdateCommand);
                 return Ok();
             }
             catch (Exception ex)

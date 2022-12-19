@@ -1,14 +1,15 @@
-﻿using GymRatApi.ContractModules;
+﻿using GymRatApi.Commands;
+using GymRatApi.Dto;
 using GymRatApi.Entieties;
 
 namespace GymRatApi.Services
 {
     public interface IVideoServices
     {
-        Task<Video> Create(CreateBaseVideoContract createBaseVideoContract);
+        Task<Video> Create(VideoCreateCommand videoCreateCommand);
         Task<List<Video>> GetAll();
-        Task<Video> GetById(int id);
-        Task Delete (int id);
-        Task Update (Video video);
+        Task<Video> GetById(VideoGetDto videoGetDto);
+        Task Delete (VideoDeleteCommand videoDeleteCommand);
+        Task Update (VideoUpdateCommand videoUpdateCommand);
     }
 }

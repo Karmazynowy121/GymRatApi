@@ -1,4 +1,5 @@
-﻿using GymRatApi.ContractModules;
+﻿using GymRatApi.Commands;
+using GymRatApi.Dto;
 using GymRatApi.Entieties;
 using GymRatApi.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -16,15 +17,15 @@ namespace GymRatApi.Controllers
             _sportServices = sportServices;
         }
         [HttpPut]
-        public async Task<IActionResult> CreateSport([FromBody] CreateSportContract createSportContract)
+        public async Task<IActionResult> CreateSport([FromBody] CreateSportCommand createSportCommand)
         {
             try
             {
-                if (createSportContract is null)
+                if (createSportCommand is null)
                 {
                     return BadRequest();
                 }
-                var newSport = await _sportServices.Create(createSportContract);
+                var newSport = await _sportServices.Create(createSportCommand);
                 return Ok(newSport);
             }
             catch (Exception ex)
@@ -39,15 +40,15 @@ namespace GymRatApi.Controllers
             return await _sportServices.GetAll();
         }
         [HttpGet("{id}")]
-        public async Task<ActionResult<Sport>> Get([FromRoute] int id)
+        public async Task<ActionResult<Sport>> Get([FromRoute] SportGetDto sportGetDto)
         {
             try
             {
-                if (id <= 0)
+                if (sportGetDto is null)
                 {
                     return BadRequest();
                 }
-                return await _sportServices.GetById(id);
+                return await _sportServices.GetById(sportGetDto);
             }
             catch (Exception ex)
             {
@@ -55,15 +56,15 @@ namespace GymRatApi.Controllers
             }
         }
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete([FromRoute] int id)
+        public async Task<ActionResult> Delete([FromRoute] SportDeleteCommand sportDeleteCommand)
         {
             try
             {
-                if (id <= 0)
+                if (sportDeleteCommand is null)
                 {
                     return BadRequest();
                 }
-                await _sportServices.Delete(id);
+                await _sportServices.Delete(sportDeleteCommand);
                 return Ok();
             }
             catch (Exception ex)
@@ -72,15 +73,15 @@ namespace GymRatApi.Controllers
             }
         }
         [HttpPatch]
-        public async Task<ActionResult> Update([FromRoute] CreateSportContract createSportContract)
+        public async Task<ActionResult> Update([FromRoute] SportUpdateCommand sportUpdateCommand)
         {
             try
             {
-                if (createSportContract == null)
+                if (sportUpdateCommand == null)
                 {
                     return BadRequest("sport is invalid, is null");
                 }
-                await _sportServices.Update(createSportContract);
+                await _sportServices.Update(sportUpdateCommand);
                 return Ok();
             }
             catch (Exception ex)

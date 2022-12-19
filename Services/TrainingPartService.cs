@@ -1,4 +1,4 @@
-﻿using GymRatApi.ContractModules;
+﻿using GymRatApi.Commands;
 using GymRatApi.Entieties;
 
 namespace GymRatApi.Services
@@ -10,53 +10,53 @@ namespace GymRatApi.Services
         {
         }
 
-        public Task<TrainingPart> Create(CreateTrainingPartContract createTrainingPartContract)
+        public Task<TrainingPart> Create(TrainingPartCreateCommand trainingPartCreateCommand)
         {
-            if (createTrainingPartContract == null)
+            if (trainingPartCreateCommand == null)
             {
                 throw new ArgumentNullException("CreateTrainingPartContract is empty");
             }
-            var rootTraining = _dbContext.Training.FirstOrDefault(t => t.Id == createTrainingPartContract.TrainingId);
+            var rootTraining = _dbContext.Training.FirstOrDefault(t => t.Id == trainingPartCreateCommand.TrainingId);
 
             if (rootTraining == null)
             {
-                throw new Exception($"Training with id: {createTrainingPartContract.TrainingId} does not exist");
+                throw new Exception($"Training with id: {trainingPartCreateCommand.TrainingId} does not exist");
             }
-            var rootExercise = _dbContext.Exercises.FirstOrDefault(ex => ex.Id == createTrainingPartContract.ExerciseId);
+            var rootExercise = _dbContext.Exercises.FirstOrDefault(ex => ex.Id == trainingPartCreateCommand.ExerciseId);
 
             if (rootExercise == null)
             {
-                throw new Exception($"Exercise with id: {createTrainingPartContract.ExerciseId} does not exist");
+                throw new Exception($"Exercise with id: {trainingPartCreateCommand.ExerciseId} does not exist");
             }
 
             var newTrainingPart = new TrainingPart();
-            newTrainingPart.AmountSeries = createTrainingPartContract.AmountSeries;
-            newTrainingPart.BodyWeight = createTrainingPartContract.BodyWeight;
-            newTrainingPart.Reps = createTrainingPartContract.Reps;
-            newTrainingPart.BreakBetweenSeries = createTrainingPartContract.BreakBetweenSeries;
-            newTrainingPart.ExerciseId = createTrainingPartContract.ExerciseId;
+            newTrainingPart.AmountSeries = trainingPartCreateCommand.AmountSeries;
+            newTrainingPart.BodyWeight = trainingPartCreateCommand.BodyWeight;
+            newTrainingPart.Reps = trainingPartCreateCommand.Reps;
+            newTrainingPart.BreakBetweenSeries = trainingPartCreateCommand.BreakBetweenSeries;
+            newTrainingPart.ExerciseId = trainingPartCreateCommand.ExerciseId;
             newTrainingPart.Exercise = rootExercise;
-            newTrainingPart.TrainingId = createTrainingPartContract.TrainingId;
+            newTrainingPart.TrainingId = trainingPartCreateCommand.TrainingId;
             newTrainingPart.Training = rootTraining;
             _dbContext.Add(newTrainingPart);
             _dbContext.SaveChanges();
             return Task.FromResult(newTrainingPart);
         }
         public Task<List<TrainingPart>> GetAll() => Task.FromResult(_dbContext.TrainingParts.ToList());
-        public Task Delete(int id)
+        public Task Delete(TrainingPartDeleteCommand trainingPartDeleteCommand)
         {
             var trainingPart = _dbContext
                 .TrainingParts
-                .FirstOrDefault(t => t.Id == id);
+                .FirstOrDefault(t => t.Id == trainingPartDeleteCommand.Id);
             if (trainingPart == null)
                 throw new Exception("trainingPart not found");
             _dbContext.TrainingParts.Remove(trainingPart);
             _dbContext.SaveChanges();
             return Task.CompletedTask;
         }
-        public Task Update(TrainingPart trainingPart)
+        public Task Update(TrainingPartUpdateCommand trainingPartUpdateCommand)
         {
-            _dbContext.Update(trainingPart);
+            _dbContext.Update(trainingPartUpdateCommand);
             _dbContext.SaveChanges();
             return Task.CompletedTask;
 

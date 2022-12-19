@@ -1,4 +1,4 @@
-﻿using GymRatApi.ContractModules;
+﻿using GymRatApi.Commands;
 using GymRatApi.Entieties;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,14 +11,14 @@ namespace GymRatApi.Services
         {
         }
 
-        public async Task<TrainingScheulde> Create (CreateTrainingScheuldeContract createTrainingScheuldeContract)
+        public async Task<TrainingScheulde> Create (TrainingScheuldeCreateCommand trainingScheuldeCreateCommand)
         {
-            if (createTrainingScheuldeContract == null)
+            if (trainingScheuldeCreateCommand == null)
             {
                 throw new ArgumentNullException("user or training is null");
             }
 
-            var userFormDb = await _dbContext.Users.Where(u => u.Id == createTrainingScheuldeContract.UserId)
+            var userFormDb = await _dbContext.Users.Where(u => u.Id == trainingScheuldeCreateCommand.UserId)
                 .Include(u => u.TrainingScheuldes).ThenInclude(ts => ts.TrainingScheulde).FirstOrDefaultAsync();
 
             if (userFormDb == null)
@@ -28,14 +28,14 @@ namespace GymRatApi.Services
 
             // robimy nowy szablon dla listy treningowej 
             var newTrainingScheulde = new TrainingScheulde();
-            newTrainingScheulde.Name = createTrainingScheuldeContract.Name;
+            newTrainingScheulde.Name = trainingScheuldeCreateCommand.Name;
             _dbContext.Add(newTrainingScheulde);
             _dbContext.SaveChanges();
 
             // jak już mamy liste zrobiona to probujemy utworzyć tablice laczaca
             var newUserTrainingScheulde = new UserTrainingScheulde()
             {
-                UserId = createTrainingScheuldeContract.UserId,
+                UserId = trainingScheuldeCreateCommand.UserId,
                 User = userFormDb,
                 TrainingScheulde = newTrainingScheulde,
                 TrainingScheuldeId = newTrainingScheulde.Id
@@ -51,18 +51,18 @@ namespace GymRatApi.Services
            
             return newTrainingScheulde;
         }
-        public Task Update(CreateTrainingScheuldeContract createTrainingScheuldeContract)
+        public Task Update(TrainingScheuldeUpdateCommand trainingScheuldeUpdateCommand)
         {
-            _dbContext.Update(createTrainingScheuldeContract);
+            _dbContext.Update(trainingScheuldeUpdateCommand);
             _dbContext.SaveChanges();
             return Task.CompletedTask;
 
         }
-        public Task Delete(int id)
+        public Task Delete(TrainingScheuldeDeleteCommand trainingScheuldeDeleteCommand)
         {
             var trainingScheulde = _dbContext
                 .TrainingScheulde
-                .FirstOrDefault(t => t.Id == id);
+                .FirstOrDefault(t => t.Id == trainingScheuldeDeleteCommand.Id);
             if (trainingScheulde == null)
                 throw new Exception("trainingScheulde not found");
             _dbContext.TrainingScheulde.Remove(trainingScheulde);

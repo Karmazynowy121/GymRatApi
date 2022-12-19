@@ -1,4 +1,4 @@
-﻿using GymRatApi.ContractModules;
+﻿using GymRatApi.Commands;
 using GymRatApi.Entieties;
 using GymRatApi.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -16,15 +16,15 @@ namespace GymRatApi.Controllers
             _trainingPartServices = trainingPartServices;
         }
         [HttpPut]
-        public async Task<IActionResult> CreateTraining([FromBody] CreateTrainingPartContract createTrainingPartContract)
+        public async Task<IActionResult> CreateTraining([FromBody] TrainingPartCreateCommand trainingPartCreateCommand)
         {
             try
             {
-                if (createTrainingPartContract is null)
+                if (trainingPartCreateCommand is null)
                 {
                     return BadRequest();
                 }
-                var newTrainingPart = _trainingPartServices.Create(createTrainingPartContract); 
+                var newTrainingPart = _trainingPartServices.Create(trainingPartCreateCommand); 
                 return Ok(newTrainingPart);
             }
             catch (Exception ex)
@@ -38,15 +38,15 @@ namespace GymRatApi.Controllers
             return await _trainingPartServices.GetAll();
         }
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete([FromRoute] int id)
+        public async Task<ActionResult> Delete([FromRoute] TrainingPartDeleteCommand trainingPartDeleteCommand)
         {
             try
             {
-                if (id <= 0)
+                if (trainingPartDeleteCommand is null)
                 {
                     return BadRequest();
                 }
-                await _trainingPartServices.Delete(id);
+                await _trainingPartServices.Delete(trainingPartDeleteCommand);
                 return Ok();
             }
             catch (Exception ex)
@@ -55,15 +55,15 @@ namespace GymRatApi.Controllers
             }
         }
         [HttpPatch]
-        public async Task<ActionResult> Update([FromRoute] TrainingPart trainingPart)
+        public async Task<ActionResult> Update([FromRoute] TrainingPartUpdateCommand trainingPartUpdateCommand)
         {
             try
             {
-                if (trainingPart == null)
+                if (trainingPartUpdateCommand == null)
                 {
                     return BadRequest("Video is invalid, is null");
                 }
-                await _trainingPartServices.Update(trainingPart);
+                await _trainingPartServices.Update(trainingPartUpdateCommand);
                 return Ok();
             }
             catch (Exception ex)

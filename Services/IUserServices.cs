@@ -1,14 +1,16 @@
-﻿using GymRatApi.Entieties;
+﻿using GymRatApi.Commands;
+using GymRatApi.Dto;
+using GymRatApi.Entieties;
 
 namespace GymRatApi.Services
 {
     public interface IUserServices
     {
-       Task <User> Create(string name,string email, string password);
+       Task <User> Create(UserCreateCommand userCreateCommand);
        Task <List<User>> GetAll();
-       Task <User> GetById(int id);
-       Task Delete(int id);
-       Task Update(User user);
+       Task <User> GetById(UserGetDto userGetDto);
+       Task Delete(UserDeleteCommand userDeleteCommand);
+       Task Update(UserUpdateCommand userUpdateCommand);
         
     }
 }

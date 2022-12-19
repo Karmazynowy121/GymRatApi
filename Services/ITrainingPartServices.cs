@@ -1,13 +1,13 @@
-﻿using GymRatApi.ContractModules;
+﻿using GymRatApi.Commands;
 using GymRatApi.Entieties;
 
 namespace GymRatApi.Services
 {
     public interface ITrainingPartServices
     {
-        Task<TrainingPart> Create(CreateTrainingPartContract createTrainingPartContract);
+        Task<TrainingPart> Create(TrainingPartCreateCommand trainingPartCreateCommand);
         Task<List<TrainingPart>> GetAll();
-        Task Delete(int id);
-        Task Update (TrainingPart part);
+        Task Delete(TrainingPartDeleteCommand trainingPartDeleteCommand);
+        Task Update (TrainingPartUpdateCommand trainingPartUpdateCommand);
     }
 }

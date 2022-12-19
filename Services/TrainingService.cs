@@ -1,4 +1,4 @@
-﻿using GymRatApi.ContractModules;
+﻿using GymRatApi.Commands;
 using GymRatApi.Entieties;
 using GymRatApi.Utilis;
 
@@ -11,17 +11,17 @@ namespace GymRatApi.Services
         {
         }
 
-        public Task<Training> Create(CreateTrainingContract createTrainingContract)
+        public Task<Training> Create(TrainingCreateCommand trainingCreateCommand)
         {
-            if (createTrainingContract == null)
+            if (trainingCreateCommand == null)
             {
                 throw new ArgumentNullException("CreateTrainingContract is empty");
             }
             var newTraining = new Training();
-            newTraining.Description = createTrainingContract.Description;
-            newTraining.TrainingDate = createTrainingContract.TrainingDate;
-            newTraining.Interval = createTrainingContract.Interval;
-            newTraining.TrainingDuration = createTrainingContract.TrainingDuration;
+            newTraining.Description = trainingCreateCommand.Description;
+            newTraining.TrainingDate = trainingCreateCommand.TrainingDate;
+            newTraining.Interval = trainingCreateCommand.Interval;
+            newTraining.TrainingDuration = trainingCreateCommand.TrainingDuration;
             _dbContext.Add(newTraining);
             _dbContext.SaveChanges();
             return Task.FromResult(newTraining);

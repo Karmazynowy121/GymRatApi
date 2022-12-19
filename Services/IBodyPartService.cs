@@ -1,14 +1,15 @@
-﻿using GymRatApi.ContractModules;
+﻿using GymRatApi.Commands;
+using GymRatApi.Dto;
 using GymRatApi.Entieties;
 
 namespace GymRatApi.Services
 {
     public interface IBodyPartService
     {
-        Task<BodyPart> Create(CreateBodyPartContract createBodyPartContract);
+        Task<BodyPart> Create(BodyPartCreateCommand bodyPartCreateCommand);
         Task<List<BodyPart>> GetAll();
-        Task<BodyPart> GetById(int id);
-        Task Delete(int id);
-        Task Update (BodyPart bodyPart);
+        Task<BodyPart> GetById(BodyPartGetDto bodyPartGetDto);
+        Task Update (BodyPartUpdateCommand bodyPartUpdateCommand);
+        Task Delete(BodyPartDeleteCommand bodyPartDeleteCommand);
     }
 }

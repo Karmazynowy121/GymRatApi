@@ -1,4 +1,5 @@
-﻿using GymRatApi.ContractModules;
+﻿using GymRatApi.Commands;
+using GymRatApi.Dto;
 using GymRatApi.Entieties;
 
 namespace GymRatApi.Services
@@ -9,52 +10,52 @@ namespace GymRatApi.Services
             : base(dbContext) 
         {
         }
-        public Task<Sport> Create(CreateSportContract createSportContract)
+        public Task<Sport> Create(CreateSportCommand createSportCommand)
         {
-            if (createSportContract == null)
+            if (createSportCommand == null)
             {
                 throw new ArgumentNullException("CreateSportContract is empty");
             }
 
-            var rootExercise = _dbContext.Exercises.FirstOrDefault(ex => ex.Id == createSportContract.ExerciseId);
+            var rootExercise = _dbContext.Exercises.FirstOrDefault(ex => ex.Id == createSportCommand.ExerciseId);
             if (rootExercise == null)
             {
-                throw new Exception($"Exercise with id: {createSportContract.ExerciseId} does not exist");
+                throw new Exception($"Exercise with id: {createSportCommand.ExerciseId} does not exist");
             }
 
             var newSport = new Sport();
-            newSport.Name = createSportContract.Name;
-            newSport.ExerciseId = createSportContract.ExerciseId;
+            newSport.Name = createSportCommand.Name;
+            newSport.ExerciseId = createSportCommand.ExerciseId;
             newSport.Exercise = rootExercise;
             _dbContext.Add(newSport);
             _dbContext.SaveChanges();
             return Task.FromResult(newSport);
         }
         public Task<List<Sport>> GetAll() => Task.FromResult(_dbContext.Sports.ToList());
-        public Task<Sport> GetById(int id)
+        public Task<Sport> GetById(SportGetDto sportGetDto)
         {
 
-            var sport = _dbContext.Sports.FirstOrDefault(s => s.Id == id);
+            var sport = _dbContext.Sports.FirstOrDefault(s => s.Id == sportGetDto.Id);
             if (sport is null)
             {
-                throw new Exception($"sport {id} not found");
+                throw new Exception($"sport {sportGetDto} not found");
             }
             return Task.FromResult(sport);
         }
-        public Task Delete(int id)
+        public Task Delete(SportDeleteCommand sportDeleteCommand)
         {
             var sport = _dbContext
                 .Sports
-                .FirstOrDefault(s => s.Id == id);
+                .FirstOrDefault(s => s.Id == sportDeleteCommand.Id);
             if (sport == null)
                 throw new Exception("sport not found");
             _dbContext.Sports.Remove(sport);
             _dbContext.SaveChanges();
             return Task.CompletedTask;
         }
-        public Task Update(CreateSportContract createSportContract)
+        public Task Update(SportUpdateCommand sportUpdateCommand)
         {
-            _dbContext.Update(createSportContract);
+            _dbContext.Update(sportUpdateCommand);
             _dbContext.SaveChanges();
             return Task.CompletedTask;
 

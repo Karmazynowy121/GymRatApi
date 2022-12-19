@@ -1,8 +1,6 @@
-﻿using GymRatApi.Entieties;
-
-namespace GymRatApi.ContractModules
+﻿namespace GymRatApi.Commands
 {
-    public class CreateTrainingContract
+    public class TrainingCreateCommand
     {
         public string Description { get; set; }
         public DateTime TrainingDate { get; set; }
