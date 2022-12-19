@@ -34,8 +34,9 @@ namespace GymRatApi.Services
             _dbContext.SaveChanges();
             return Task.FromResult(_mapper.Map<SportDto>(newSport));
         }
-        public Task<List<Sport>> GetAll() => Task.FromResult(_dbContext.Sports.ToList());
-        public Task<Sport> GetById(int id)
+        public Task<List<SportDto>> GetAll() 
+            => Task.FromResult(_mapper.Map<List<SportDto>>(_dbContext.Sports.ToList()));
+        public Task<SportDto> GetById(int id)
         {
 
             var sport = _dbContext.Sports.FirstOrDefault(s => s.Id == id);
@@ -49,7 +50,7 @@ namespace GymRatApi.Services
         {
             var sport = _dbContext
                 .Sports
-                .FirstOrDefault(s => s.Id == sportDeleteCommand.Id);
+                .FirstOrDefault(s => s.Id == id);
             if (sport == null)
                 throw new Exception("sport not found");
             _dbContext.Sports.Remove(sport);

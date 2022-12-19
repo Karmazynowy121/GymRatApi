@@ -1,4 +1,5 @@
-﻿using GymRatApi.ContractModules;
+﻿using GymRatApi.Commands.BodyPartCommands;
+using GymRatApi.Dto;
 using GymRatApi.Entieties;
 using GymRatApi.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -72,15 +73,15 @@ namespace GymRatApi.Controllers
 
         }
         [HttpPatch]
-        public async Task<ActionResult> Update([FromRoute] BodyPart bodyPart)
+        public async Task<ActionResult> Update([FromRoute] BodyPartUpdateCommand bodyPartUpdateCommand)
         {
             try
             {
-                if (bodyPart == null)
+                if (bodyPartUpdateCommand == null)
                 {
                     return BadRequest("Video is invalid, is null");
                 }
-                await _bodyPartService.Update(bodyPart);
+                await _bodyPartService.Update(bodyPartUpdateCommand);
                 return Ok();
             }
             catch (Exception ex)
