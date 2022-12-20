@@ -1,6 +1,5 @@
 ﻿using GymRatApi.Commands.ExerciseCommands;
 using GymRatApi.Dto;
-using GymRatApi.Entieties;
 using GymRatApi.Services;
 using Microsoft.AspNetCore.Mvc;
 

@@ -72,7 +72,7 @@ namespace GymRatApi.Controllers
         }
         [HttpPatch]
 
-        public async Task<ActionResult> Update([FromRoute] UserUpdateCommand userUpdateCommand)
+        public async Task<ActionResult> Update([FromBody] UserUpdateCommand userUpdateCommand)
         {
             try
             {

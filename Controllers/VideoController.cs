@@ -74,7 +74,7 @@ namespace GymRatApi.Controllers
             }
         }
         [HttpPatch]
-        public async Task<ActionResult> Update([FromRoute]VideoUpdateCommand videoUpdateCommand)
+        public async Task<ActionResult> Update([FromBody]VideoUpdateCommand videoUpdateCommand)
         {
             try
             {
