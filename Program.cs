@@ -1,3 +1,4 @@
+using GymRatApi.Dto;
 using GymRatApi.Entieties;
 using GymRatApi.Services;
 using Microsoft.EntityFrameworkCore;
@@ -7,7 +8,17 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 Console.WriteLine(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, builder.Configuration.GetConnectionString("DatabaseName")));
-
+builder.Services.AddAutoMapper(cfg =>
+{
+    cfg.CreateMap<BodyPart, BodyPartDto>();
+    cfg.CreateMap<Exercise, ExerciseDto>();
+    cfg.CreateMap<Sport, SportDto>();
+    cfg.CreateMap<Training, TrainingDto>();
+    cfg.CreateMap<TrainingPart, TrainingPartDto>();
+    cfg.CreateMap<TrainingScheulde, TrainingScheuldeDto>();
+    cfg.CreateMap<User, UserDto>();
+    cfg.CreateMap<Video, VideoDto>();
+});
 builder.Services.AddControllers().AddNewtonsoftJson(options => {
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
 });

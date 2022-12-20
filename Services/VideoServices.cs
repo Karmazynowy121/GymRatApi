@@ -1,39 +1,44 @@
-﻿using GymRatApi.ContractModules;
+﻿using AutoMapper;
+using GymRatApi.Commands.VideoCommands;
+using GymRatApi.Dto;
 using GymRatApi.Entieties;
 
 namespace GymRatApi.Services
 {
     public class VideoServices : BaseServices, IVideoServices
     {
-        public VideoServices(GymDbContext dbContext) 
+        private readonly IMapper _mapper;
+        public VideoServices(GymDbContext dbContext, IMapper mapper) 
             : base(dbContext)
         {
+            _mapper = mapper;
         }
-        public Task<Video> Create(CreateBaseVideoContract createBaseVideoContract)
+        public Task<VideoDto> Create(VideoCreateCommand videoCreateCommand)
         {
-            if (createBaseVideoContract == null)
+            if (videoCreateCommand == null)
             {
                 throw new ArgumentNullException("CreateBaseVideoContract is empty");
             }
 
-            var rootExercise = _dbContext.Exercises.FirstOrDefault(ex => ex.Id == createBaseVideoContract.ExerciseId);
+            var rootExercise = _dbContext.Exercises.FirstOrDefault(ex => ex.Id == videoCreateCommand.ExerciseId);
 
             if (rootExercise == null)
             {
-                throw new Exception($"Exercise with id: {createBaseVideoContract.ExerciseId} does not exist");
+                throw new Exception($"Exercise with id: {videoCreateCommand.ExerciseId} does not exist");
             }
 
             var newVideo = new Video();
-            newVideo.Title = createBaseVideoContract.Title;
-            newVideo.Path = createBaseVideoContract.Path;
-            newVideo.ExerciseId = createBaseVideoContract.ExerciseId;
+            newVideo.Title = videoCreateCommand.Title;
+            newVideo.Path = videoCreateCommand.Path;
+            newVideo.ExerciseId = videoCreateCommand.ExerciseId;
             newVideo.Exercise = rootExercise;
             _dbContext.Add(newVideo);
             _dbContext.SaveChanges();
-            return Task.FromResult(newVideo);
+            return Task.FromResult(_mapper.Map<VideoDto>(newVideo));
         }
-        public Task<List<Video>> GetAll() => Task.FromResult(_dbContext.Videos.ToList());
-        public Task<Video> GetById(int id)
+        public Task<List<VideoDto>> GetAll() 
+            => Task.FromResult(_mapper.Map <List<VideoDto>> (_dbContext.Videos.ToList()));
+        public Task<VideoDto> GetById(int id)
         {
 
             var video = _dbContext.Videos.FirstOrDefault(v => v.Id == id);
@@ -41,7 +46,7 @@ namespace GymRatApi.Services
             {
                 throw new Exception($"video {id} not found");
             }
-            return Task.FromResult(video);
+            return Task.FromResult(_mapper.Map<VideoDto>(video));
         }
         public Task Delete(int id)
         {
@@ -54,9 +59,9 @@ namespace GymRatApi.Services
             _dbContext.SaveChanges();
             return Task.CompletedTask;
         }
-        public Task Update(Video video)
+        public Task Update(VideoUpdateCommand videoUpdateCommand)
         {
-            _dbContext.Update(video); 
+            _dbContext.Update(videoUpdateCommand); 
             _dbContext.SaveChanges();
             return Task.CompletedTask;
                 

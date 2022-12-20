@@ -1,4 +1,5 @@
-﻿using GymRatApi.ContractModules;
+﻿using GymRatApi.Commands.BodyPartCommands;
+using GymRatApi.Dto;
 using GymRatApi.Entieties;
 using GymRatApi.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -16,15 +17,15 @@ namespace GymRatApi.Controllers
             _bodyPartService = bodyPartService;
         }
         [HttpPut]
-        public async Task<IActionResult> CreateBodyPart([FromBody] CreateBodyPartContract createBodyPartContract)
+        public async Task<IActionResult> CreateBodyPart([FromBody] BodyPartCreateCommand bodyPartCreateCommand)
         {
             try
             {
-                if (createBodyPartContract is null)
+                if (bodyPartCreateCommand is null)
                 {
                     return BadRequest();
                 }
-                var newBodyPart = await _bodyPartService.Create(createBodyPartContract);
+                var newBodyPart = await _bodyPartService.Create(bodyPartCreateCommand);
                 return Ok(newBodyPart);
             }
             catch (Exception ex)
@@ -33,12 +34,12 @@ namespace GymRatApi.Controllers
             }
         }
         [HttpGet]
-        public async Task<List<BodyPart>> GetAll()
+        public async Task<List<BodyPartDto>> GetAll()
         {
             return await _bodyPartService.GetAll();
         }
         [HttpGet("{id}")]
-        public async Task<ActionResult<BodyPart>> Get([FromRoute] int id)
+        public async Task<ActionResult<BodyPartDto>> Get([FromRoute] int id)
         {
             try
             {
@@ -72,15 +73,15 @@ namespace GymRatApi.Controllers
 
         }
         [HttpPatch]
-        public async Task<ActionResult> Update([FromRoute] BodyPart bodyPart)
+        public async Task<ActionResult> Update([FromBody] BodyPartUpdateCommand bodyPartUpdateCommand)
         {
             try
             {
-                if (bodyPart == null)
+                if (bodyPartUpdateCommand == null)
                 {
                     return BadRequest("Video is invalid, is null");
                 }
-                await _bodyPartService.Update(bodyPart);
+                await _bodyPartService.Update(bodyPartUpdateCommand);
                 return Ok();
             }
             catch (Exception ex)

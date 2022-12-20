@@ -1,46 +1,55 @@
-﻿using GymRatApi.ContractModules;
+﻿using AutoMapper;
+using GymRatApi.Commands.BodyPartCommands;
+using GymRatApi.Dto;
 using GymRatApi.Entieties;
 
 namespace GymRatApi.Services
 {
     public class BodyPartService : BaseServices, IBodyPartService 
     {
-        public BodyPartService(GymDbContext dbContext) 
+        private readonly IMapper _mapper;
+        public BodyPartService(GymDbContext dbContext, IMapper mapper) 
             : base(dbContext)
         {
+            _mapper = mapper;
         }
 
-        public Task<BodyPart>Create (CreateBodyPartContract createBodyPartContract)
+        public Task<BodyPartDto>Create (BodyPartCreateCommand bodyPartCreateCommand)
         {
-            if (createBodyPartContract == null)
+            if (bodyPartCreateCommand == null)
             {
                 throw new ArgumentException("createBodyPartContract is empty");
             }
-            var rootExercise = _dbContext.Exercises.FirstOrDefault(ex => ex.Id == createBodyPartContract.ExerciseId);
+            var rootExercise = _dbContext.Exercises.FirstOrDefault(ex => ex.Id == bodyPartCreateCommand.ExerciseId);
 
             if (rootExercise == null)
             {
-                throw new Exception($"Exercise with id: {createBodyPartContract.ExerciseId} does not exist");
+                throw new Exception($"Exercise with id: {bodyPartCreateCommand.ExerciseId} does not exist");
             }
             var newBodyPart = new BodyPart();
-            newBodyPart.Name = createBodyPartContract.Name;
-            newBodyPart.HowManyExercisesPerWeek = createBodyPartContract.HowManyExercisePerWeek;
-            newBodyPart.ExerciseId = createBodyPartContract.ExerciseId;
+            newBodyPart.Name = bodyPartCreateCommand.Name;
+            newBodyPart.HowManyExercisesPerWeek = bodyPartCreateCommand.HowManyExercisePerWeek;
+            newBodyPart.ExerciseId = bodyPartCreateCommand.ExerciseId;
             newBodyPart.Exercise = rootExercise;
             _dbContext.Add(newBodyPart);
             _dbContext.SaveChanges();
-            return Task.FromResult(newBodyPart);
+            return Task.FromResult(_mapper.Map<BodyPartDto>(newBodyPart));
         }
-        public Task<List<BodyPart>> GetAll() => Task.FromResult(_dbContext.BodyParts.ToList());
-        public Task<BodyPart> GetById(int id)
+        public Task<List<BodyPartDto>> GetAll() 
+            => Task.FromResult(_mapper.Map<List<BodyPartDto>>(_dbContext.BodyParts.ToList()));
+
+        public Task<BodyPartDto> GetById(int id)
         {
+            
+
+
 
             var bodyPart = _dbContext.BodyParts.FirstOrDefault(b => b.Id == id);
             if (bodyPart is null)
             {
                 throw new Exception($"bodyPart {id} not found");
             }
-            return Task.FromResult(bodyPart);
+            return Task.FromResult(_mapper.Map<BodyPartDto>(bodyPart));
         }
         public Task Delete(int id)
         {
@@ -53,9 +62,9 @@ namespace GymRatApi.Services
             _dbContext.SaveChanges();
             return Task.CompletedTask;
         }
-        public Task Update(BodyPart bodyPart)
+        public Task Update(BodyPartUpdateCommand bodyPartUpdateCommand)
         {
-            _dbContext.Update(bodyPart);
+            _dbContext.Update(bodyPartUpdateCommand);
             _dbContext.SaveChanges();
             return Task.CompletedTask;
 

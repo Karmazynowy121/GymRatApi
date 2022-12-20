@@ -1,5 +1,5 @@
-﻿using GymRatApi.ContractModules;
-using GymRatApi.Entieties;
+﻿using GymRatApi.Commands.ExerciseCommands;
+using GymRatApi.Dto;
 using GymRatApi.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,18 +16,18 @@ namespace GymRatApi.Controllers
         }
 
         [HttpPut]
-        public async Task <IActionResult> CreateExercise([FromBody] CreateExerciseContract createExerciseContract)
+        public async Task <IActionResult> CreateExercise([FromBody] ExerciseCreateCommand exerciseCreateCommand)
         {
-            var newExercise = await _exerciseServices.Create(createExerciseContract);
+            var newExercise = await _exerciseServices.Create(exerciseCreateCommand);
             return Ok(newExercise);
         }
         [HttpGet]
-        public async Task <List<Exercise>> GetAll()
+        public async Task <List<ExerciseDto>> GetAll()
         {
           return await _exerciseServices.GetAll();
         }
         [HttpGet("{name}")]
-        public async Task <ActionResult<Exercise>> Get([FromRoute]string name)
+        public async Task <ActionResult<ExerciseDto>> Get([FromRoute] string name)
         {
             try
             {
@@ -44,11 +44,11 @@ namespace GymRatApi.Controllers
             }
         }
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete([FromRoute]int id)
+        public async Task<ActionResult> Delete([FromRoute] int id)
         {
             try
             {
-                if (id <= 0)
+                if (id == 0)
                 {
                     return BadRequest();
                 }

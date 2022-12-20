@@ -1,4 +1,4 @@
-﻿using GymRatApi.ContractModules;
+﻿using GymRatApi.Commands.TrainingCommands;
 using GymRatApi.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,15 +14,15 @@ namespace GymRatApi.Controllers
             _trainingService = trainingService;
         }
         [HttpPut]
-        public async Task<IActionResult> CreateTraining([FromBody] CreateTrainingContract createTrainingContract)
+        public async Task<IActionResult> CreateTraining([FromBody] TrainingCreateCommand trainingCreateCommand)
         {
             try
             {
-                if (createTrainingContract is null)
+                if (trainingCreateCommand is null)
                 {
                     return BadRequest();
                 }
-                var newTraining = await _trainingService.Create(createTrainingContract);
+                var newTraining = await _trainingService.Create(trainingCreateCommand);
                 return Ok(newTraining);
             }
             catch (Exception ex)

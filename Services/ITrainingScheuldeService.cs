@@ -1,13 +1,14 @@
-﻿using GymRatApi.ContractModules;
+﻿using GymRatApi.Commands.TrainingScheuldeCommands;
+using GymRatApi.Dto;
 using GymRatApi.Entieties;
 
 namespace GymRatApi.Services
 {
     public interface ITrainingScheuldeService
     {
-        Task <TrainingScheulde> Create(CreateTrainingScheuldeContract createTrainingScheuldeContract);
-        Task Update(CreateTrainingScheuldeContract createTrainingScheuldeContract);
+        Task <TrainingScheuldeDto> Create(TrainingScheuldeCreateCommand trainingScheuldeCreateCommand);
+        Task Update(TrainingScheuldeUpdateCommand trainingScheuldeUpdateCommand);
         Task Delete(int id);
-        Task<List<TrainingScheulde>> GetAll();
+        Task<List<TrainingScheuldeDto>> GetAll();
     }
 }

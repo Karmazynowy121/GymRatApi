@@ -1,4 +1,5 @@
-﻿using GymRatApi.ContractModules;
+﻿using GymRatApi.Commands.SportCommands;
+using GymRatApi.Dto;
 using GymRatApi.Entieties;
 using GymRatApi.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -16,15 +17,15 @@ namespace GymRatApi.Controllers
             _sportServices = sportServices;
         }
         [HttpPut]
-        public async Task<IActionResult> CreateSport([FromBody] CreateSportContract createSportContract)
+        public async Task<IActionResult> CreateSport([FromBody] SportCreateCommand createSportCommand)
         {
             try
             {
-                if (createSportContract is null)
+                if (createSportCommand is null)
                 {
                     return BadRequest();
                 }
-                var newSport = await _sportServices.Create(createSportContract);
+                var newSport = await _sportServices.Create(createSportCommand);
                 return Ok(newSport);
             }
             catch (Exception ex)
@@ -34,16 +35,16 @@ namespace GymRatApi.Controllers
 
         }
         [HttpGet]
-        public async Task<List<Sport>> GetAll()
+        public async Task<List<SportDto>> GetAll()
         {
             return await _sportServices.GetAll();
         }
         [HttpGet("{id}")]
-        public async Task<ActionResult<Sport>> Get([FromRoute] int id)
+        public async Task<ActionResult<SportDto>> Get([FromRoute] int id)
         {
             try
             {
-                if (id <= 0)
+                if (id == 0)
                 {
                     return BadRequest();
                 }
@@ -59,7 +60,7 @@ namespace GymRatApi.Controllers
         {
             try
             {
-                if (id <= 0)
+                if (id == 0)
                 {
                     return BadRequest();
                 }
@@ -72,15 +73,15 @@ namespace GymRatApi.Controllers
             }
         }
         [HttpPatch]
-        public async Task<ActionResult> Update([FromRoute] CreateSportContract createSportContract)
+        public async Task<ActionResult> Update([FromBody] SportUpdateCommand sportUpdateCommand)
         {
             try
             {
-                if (createSportContract == null)
+                if (sportUpdateCommand == null)
                 {
                     return BadRequest("sport is invalid, is null");
                 }
-                await _sportServices.Update(createSportContract);
+                await _sportServices.Update(sportUpdateCommand);
                 return Ok();
             }
             catch (Exception ex)

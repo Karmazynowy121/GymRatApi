@@ -1,14 +1,15 @@
-﻿using GymRatApi.ContractModules;
+﻿using GymRatApi.Commands.SportCommands;
+using GymRatApi.Dto;
 using GymRatApi.Entieties;
 
 namespace GymRatApi.Services
 {
     public interface ISportServices
     {
-        Task<Sport> Create(CreateSportContract createSportContract);
-        Task<List<Sport>> GetAll();
-        Task<Sport> GetById(int id);
+        Task<SportDto> Create(SportCreateCommand createSportCommand);
+        Task<List<SportDto>> GetAll();
+        Task<SportDto> GetById(int id);
         Task Delete(int id);
-        Task Update(CreateSportContract createSportContract);
+        Task Update(SportUpdateCommand sportUpdateCommand);
     }
 }
