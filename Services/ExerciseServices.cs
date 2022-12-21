@@ -31,11 +31,28 @@ namespace GymRatApi.Services
         public Task<List<ExerciseDto>> GetAll()
             => Task.FromResult(_mapper.Map<List<ExerciseDto>>(_dbContext.Exercises.Include(e => e.Video).ToList()));
 
+
+        public Task<Exercise> GetbyId(int exerciseId)
+        {
+            var exercise = _dbContext.Exercises.Where(g => g.Id == exerciseId)
+                .Include(e => e.Video)
+                .Include(e => e.BodyParts)
+                .Include(e => e.Sport).FirstOrDefault();
+
+            if (exercise == null)
+            {
+                throw new Exception($"Exercise {exerciseId} does not exist");
+            }
+            return Task.FromResult(exercise);
+        }
+
         public Task<ExerciseDto> GetbyName(string name)
         {
-            
+            var exercise = _dbContext.Exercises.Where(g => g.Name == name)
+                .Include(e => e.Video)
+                .Include(e => e.BodyParts)
+                .Include(e => e.Sport).FirstOrDefault();
 
-            var exercise = _dbContext.Exercises.FirstOrDefault(g => g.Name == name);
             if (exercise == null)
             {
                 throw new Exception($"Exercise {name} does not exist");
