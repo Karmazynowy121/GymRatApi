@@ -1,6 +1,5 @@
 ﻿using GymRatApi.Commands.ExerciseCommands;
 using GymRatApi.Dto;
-using GymRatApi.Entieties;
 using GymRatApi.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,7 +28,7 @@ namespace GymRatApi.Controllers
         }
 
         [HttpGet("getbyid/{id}")]
-        public async Task<ActionResult<Exercise>> GetExerciseById(int id)
+        public async Task<ActionResult<ExerciseDto>> GetExerciseById(int id)
         {
             return await _exerciseServices.GetbyId(id);
         }

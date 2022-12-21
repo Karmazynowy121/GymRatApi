@@ -10,8 +10,7 @@ namespace GymRatApi.Dto
         public int BodyWeight { get; set; }
         public int BreakBetweenSeries { get; set; }
         public int ExerciseId { get; set; }
-        public Exercise Exercise { get; set; }
         public int TrainingId { get; set; }
-        public Training Training { get; set; }
+
     }
 }
