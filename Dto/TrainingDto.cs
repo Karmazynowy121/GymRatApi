@@ -6,5 +6,7 @@ namespace GymRatApi.Dto
         public DateTime TrainingDate { get; set; }
         public int Interval { get; set; }
         public int TrainingDuration { get; set; } = 0;
+        public TrainingPartDto TrainingPart { get; set; }
+
     }
 }

@@ -9,6 +9,5 @@ namespace GymRatApi.Dto
         public int HowManyExercisesPerWeek { get; set; }
 
         public int ExerciseId { get; set; }
-        public Exercise Exercise { get; set; }
     }
 }

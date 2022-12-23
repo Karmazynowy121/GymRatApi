@@ -20,11 +20,22 @@ namespace GymRatApi.Services
             {
                 throw new ArgumentNullException("CreateTrainingContract is empty");
             }
+
+            var trainingScheuldeFromDb = _dbContext.TrainingScheulde.FirstOrDefault(ts => ts.Id == trainingCreateCommand.TrainingScheudleId);
+
+            if (trainingScheuldeFromDb == null)
+            {
+                throw new ArgumentNullException("TrainingScheulde is empty");
+            }
+
             var newTraining = new Training();
             newTraining.Description = trainingCreateCommand.Description;
             newTraining.TrainingDate = trainingCreateCommand.TrainingDate;
             newTraining.Interval = trainingCreateCommand.Interval;
             newTraining.TrainingDuration = trainingCreateCommand.TrainingDuration;
+            newTraining.TrainingScheulde = trainingScheuldeFromDb;
+            newTraining.TrainingScheuldeId = trainingScheuldeFromDb.Id;
+
             _dbContext.Add(newTraining);
             _dbContext.SaveChanges();
             return Task.FromResult(_mapper.Map<TrainingDto>(newTraining));
