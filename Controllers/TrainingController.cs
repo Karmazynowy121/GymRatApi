@@ -1,4 +1,5 @@
 ﻿using GymRatApi.Commands.TrainingCommands;
+using GymRatApi.Dto;
 using GymRatApi.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,6 +30,11 @@ namespace GymRatApi.Controllers
             {
                 return NotFound(ex.Message);
             }
+        }
+        [HttpGet]
+        public async Task<List<TrainingDto>> GetAll()
+        {
+            return await _trainingService.GetAll();
         }
     }
 }

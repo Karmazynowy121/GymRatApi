@@ -2,6 +2,7 @@
 using GymRatApi.Commands.TrainingCommands;
 using GymRatApi.Dto;
 using GymRatApi.Entieties;
+using Microsoft.EntityFrameworkCore;
 
 namespace GymRatApi.Services
 {
@@ -29,5 +30,7 @@ namespace GymRatApi.Services
             _dbContext.SaveChanges();
             return Task.FromResult(_mapper.Map<TrainingDto>(newTraining));
         }
+        public Task<List<TrainingDto>> GetAll()
+            => Task.FromResult(_mapper.Map<List<TrainingDto>>(_dbContext.Training.ToList()));
     }
 }

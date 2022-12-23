@@ -6,5 +6,6 @@ namespace GymRatApi.Services
     public interface ITrainingService
     {
         Task <TrainingDto> Create(TrainingCreateCommand trainingCreateCommand);
+        Task<List<TrainingDto>> GetAll();
     }
 }
