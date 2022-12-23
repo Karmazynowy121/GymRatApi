@@ -16,16 +16,23 @@ namespace GymRatApi.Controllers
         }
 
         [HttpPut]
-        public async Task <IActionResult> CreateExercise([FromBody] ExerciseCreateCommand exerciseCreateCommand)
+        public async Task<IActionResult> CreateExercise([FromBody] ExerciseCreateCommand exerciseCreateCommand)
         {
             var newExercise = await _exerciseServices.Create(exerciseCreateCommand);
             return Ok(newExercise);
         }
         [HttpGet]
-        public async Task <List<ExerciseDto>> GetAll()
+        public async Task<List<ExerciseDto>> GetAll()
         {
-          return await _exerciseServices.GetAll();
+            return await _exerciseServices.GetAll();
         }
+
+        [HttpGet("getbyid/{id}")]
+        public async Task<ActionResult<ExerciseDto>> GetExerciseById(int id)
+        {
+            return await _exerciseServices.GetbyId(id);
+        }
+
         [HttpGet("{name}")]
         public async Task <ActionResult<ExerciseDto>> Get([FromRoute] string name)
         {
