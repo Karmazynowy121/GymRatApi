@@ -36,5 +36,22 @@ namespace GymRatApi.Controllers
         {
             return await _trainingService.GetAll();
         }
+        [HttpPost]
+        public async Task<ActionResult> Update([FromBody] TrainingUpdateCommand trainingUpdateCommand)
+        {
+            try
+            {
+                if (trainingUpdateCommand == null)
+                {
+                    return BadRequest("Training does not exist");
+                }
+                await _trainingService.Update(trainingUpdateCommand);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
     }
 }

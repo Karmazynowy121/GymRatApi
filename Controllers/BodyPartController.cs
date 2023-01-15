@@ -71,7 +71,7 @@ namespace GymRatApi.Controllers
             }
 
         }
-        [HttpPatch]
+        [HttpPost]
         public async Task<ActionResult> Update([FromBody] BodyPartUpdateCommand bodyPartUpdateCommand)
         {
             try

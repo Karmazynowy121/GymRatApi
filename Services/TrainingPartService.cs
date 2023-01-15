@@ -61,7 +61,8 @@ namespace GymRatApi.Services
         }
         public Task Update(TrainingPartUpdateCommand trainingPartUpdateCommand)
         {
-            _dbContext.Update(trainingPartUpdateCommand);
+            var trainingPart = _mapper.Map<TrainingPart>(trainingPartUpdateCommand);   
+            _dbContext.Update(trainingPart);
             _dbContext.SaveChanges();
             return Task.CompletedTask;
 

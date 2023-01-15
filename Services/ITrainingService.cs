@@ -7,5 +7,6 @@ namespace GymRatApi.Services
     {
         Task <TrainingDto> Create(TrainingCreateCommand trainingCreateCommand);
         Task<List<TrainingDto>> GetAll();
+        Task Update(TrainingUpdateCommand trainingUpdateCommand);
     }
 }

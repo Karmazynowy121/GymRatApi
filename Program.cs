@@ -1,3 +1,11 @@
+using GymRatApi.Commands.BodyPartCommands;
+using GymRatApi.Commands.ExerciseCommands;
+using GymRatApi.Commands.SportCommands;
+using GymRatApi.Commands.TrainingCommands;
+using GymRatApi.Commands.TrainingPartCommands;
+using GymRatApi.Commands.TrainingScheuldeCommands;
+using GymRatApi.Commands.UserCommands;
+using GymRatApi.Commands.VideoCommands;
 using GymRatApi.Dto;
 using GymRatApi.Entieties;
 using GymRatApi.Services;
@@ -11,13 +19,22 @@ Console.WriteLine(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, builder.Co
 builder.Services.AddAutoMapper(cfg =>
 {
     cfg.CreateMap<BodyPart, BodyPartDto>();
+    cfg.CreateMap<BodyPartUpdateCommand, BodyPart>();
     cfg.CreateMap<Exercise, ExerciseDto>();
+    cfg.CreateMap<ExerciseUpdateCommand, Exercise>();
     cfg.CreateMap<Sport, SportDto>();
+    cfg.CreateMap<SportUpdateCommand, SportDto>();
     cfg.CreateMap<Training, TrainingDto>();
+    cfg.CreateMap<TrainingUpdateCommand, Training>();
     cfg.CreateMap<TrainingPart, TrainingPartDto>();
+    cfg.CreateMap<TrainingPartUpdateCommand, TrainingPart>();
     cfg.CreateMap<TrainingScheulde, TrainingScheuldeDto>();
+    cfg.CreateMap<TrainingScheuldeUpdateCommand, TrainingScheulde>();
     cfg.CreateMap<User, UserDto>();
+    cfg.CreateMap<UserUpdateCommand, User>();
     cfg.CreateMap<Video, VideoDto>();
+    cfg.CreateMap<VideoCreateCommand, Video>();
+    cfg.CreateMap<UserTrainingScheulde, UserTrainingScheuldeDto>();
 });
 builder.Services.AddControllers().AddNewtonsoftJson(options => {
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;

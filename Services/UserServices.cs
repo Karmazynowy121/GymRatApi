@@ -59,7 +59,8 @@ namespace GymRatApi.Services
 
         public Task Update(UserUpdateCommand userUpdateCommand)
         {
-            _dbContext.Update(userUpdateCommand);
+            var user = _mapper.Map<User>(userUpdateCommand);
+            _dbContext.Users.Update(user);
             _dbContext.SaveChanges();
             return Task.CompletedTask;
         }

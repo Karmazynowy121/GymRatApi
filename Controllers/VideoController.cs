@@ -73,7 +73,7 @@ namespace GymRatApi.Controllers
                 return NotFound(ex.Message);
             }
         }
-        [HttpPatch]
+        [HttpPost]
         public async Task<ActionResult> Update([FromBody]VideoUpdateCommand videoUpdateCommand)
         {
             try

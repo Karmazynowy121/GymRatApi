@@ -60,6 +60,13 @@ namespace GymRatApi.Services
             }
             return Task.FromResult(_mapper.Map<ExerciseDto>(exercise));
         }
+        public Task Update (ExerciseUpdateCommand exerciseUpdateCommand)
+        {
+            var exercise = _mapper.Map<Exercise>(exerciseUpdateCommand);
+            _dbContext.Update(exercise);
+            _dbContext.SaveChanges();
+            return Task.CompletedTask;
+        }
         public Task Delete (int id)
         {
             var exercise = _dbContext

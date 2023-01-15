@@ -42,6 +42,13 @@ namespace GymRatApi.Services
             return Task.FromResult(_mapper.Map<TrainingDto>(newTraining));
         }
         public Task<List<TrainingDto>> GetAll()
-            => Task.FromResult(_mapper.Map<List<TrainingDto>>(_dbContext.Training.ToList()));
+          => Task.FromResult(_mapper.Map<List<TrainingDto>>(_dbContext.Training.ToList()));
+        
+        public Task Update(TrainingUpdateCommand trainingUpdateCommand)
+        {
+            var training = _mapper.Map<Training>(trainingUpdateCommand);
+            _dbContext.Training.Update(training);
+            return Task.CompletedTask;
+        }
     }
 }
