@@ -10,7 +10,7 @@ namespace GymRatApi.Services
     public interface IUserServices
     {
        Task <UserDto> Create(UserCreateCommand userCreateCommand);
-       Task<LoggedUserDto> Login(LoginDto loginDto);
+       Task<LoggedUserDto> Login(UserLogginCommand userLogginCommand);
        Task <List<UserDto>> GetAll();
        Task <UserDto> GetById(int id);
        Task Delete(int id);

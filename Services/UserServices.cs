@@ -43,14 +43,14 @@ namespace GymRatApi.Services
             _dbContext.SaveChanges();
             return Task.FromResult(_mapper.Map<UserDto>(newUser));
         }
-        public Task<LoggedUserDto> Login(LoginDto loginDto)
+        public Task<LoggedUserDto> Login(UserLogginCommand userLogginCommand)
         {
-            var user = _dbContext.Users.FirstOrDefault(u => u.Name == loginDto.Name);
+            var user = _dbContext.Users.FirstOrDefault(u => u.Name == userLogginCommand.Name);
             if (user is null)
             {
                 throw new Exception("invalid user or password");
             }
-            var result = _passwordHasher.VerifyHashedPassword(user, user.Password, loginDto.Password);
+            var result = _passwordHasher.VerifyHashedPassword(user, user.Password, userLogginCommand.Password);
             if (result == PasswordVerificationResult.Failed) 
             {
                throw new Exception("invalid user or password");

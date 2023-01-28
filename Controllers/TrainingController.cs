@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace GymRatApi.Controllers
 {
     [ApiController]
-    [Route ("[controller]")]
+    [Route("[controller]")]
     public class TrainingController : ControllerBase
     {
         private readonly ITrainingService _trainingService;
@@ -15,7 +15,7 @@ namespace GymRatApi.Controllers
             _trainingService = trainingService;
         }
         [HttpPut]
-        public async Task<IActionResult> CreateTraining([FromBody] TrainingCreateCommand trainingCreateCommand)
+        public async Task<ActionResult<TrainingDto>> CreateTraining([FromBody] TrainingCreateCommand trainingCreateCommand)
         {
             try
             {
@@ -31,6 +31,29 @@ namespace GymRatApi.Controllers
                 return NotFound(ex.Message);
             }
         }
+
+        [HttpPut("singature")]
+        public async Task<IActionResult> CreateTrainingSingature([FromBody] TrainingCreateCommand trainingCreateCommand)
+        {
+            try
+            {
+                if (trainingCreateCommand is null)
+                {
+                    return BadRequest();
+                }
+                var newTraining = await _trainingService.Create(trainingCreateCommand);
+                return Ok(newTraining);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpGet("{id}")]
+        public async Task<TrainingDto> GetAll([FromRoute] int id)
+            => await _trainingService.GetById(id);
+
         [HttpGet]
         public async Task<List<TrainingDto>> GetAll()
         {

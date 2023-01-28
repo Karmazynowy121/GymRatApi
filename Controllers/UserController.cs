@@ -35,9 +35,9 @@ namespace GymRatApi.Controllers
             return Ok(newUser);
         }
         [HttpPost("login")]
-        public async Task<ActionResult<LoggedUserDto>> Login([FromBody]LoginDto loginDto)
+        public async Task<ActionResult<LoggedUserDto>> Login([FromBody]UserLogginCommand userLogginCommand)
         {
-            var loggedUser = await _userServices.Login(loginDto);
+            var loggedUser = await _userServices.Login(userLogginCommand);
             return Ok(loggedUser);
         }
         [HttpGet]

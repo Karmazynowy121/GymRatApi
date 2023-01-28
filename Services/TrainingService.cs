@@ -15,6 +15,9 @@ namespace GymRatApi.Services
             _mapper = mapper;
         }
 
+        public Task<TrainingDto> GetById(int id)
+            => Task.FromResult(_mapper.Map<TrainingDto>(_dbContext.Training.FirstOrDefault(ts => ts.Id == id)));
+
         public Task<TrainingDto> Create(TrainingCreateCommand trainingCreateCommand)
         {
             if (trainingCreateCommand == null)
@@ -22,7 +25,8 @@ namespace GymRatApi.Services
                 throw new ArgumentNullException("CreateTrainingContract is empty");
             }
 
-            var trainingScheuldeFromDb = _dbContext.TrainingScheulde.FirstOrDefault(ts => ts.Id == trainingCreateCommand.TrainingScheudleId);
+            var trainingScheuldeFromDb = _dbContext.TrainingScheulde
+                .FirstOrDefault(ts => ts.Id == trainingCreateCommand.TrainingScheudleId);
 
             if (trainingScheuldeFromDb == null)
             {

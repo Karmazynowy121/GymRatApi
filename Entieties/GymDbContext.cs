@@ -107,8 +107,7 @@ namespace GymRatApi.Entieties
             {
                 entity.Property(g => g.Interval);
                 entity.Property(g => g.TrainingDuration);
-                entity.Property(g => g.TrainingDate)
-                .IsRequired();
+                entity.Property(g => g.TrainingDate);
 
                 entity.HasMany(g => g.TrainingParts)
                 .WithOne(t => t.Training);

@@ -12,7 +12,6 @@ using GymRatApi.Commands.VideoCommands;
 using GymRatApi.Dto;
 using GymRatApi.Entieties;
 using GymRatApi.ModuleData.Dto;
-using GymRatApi.ModuleData.Validators;
 using GymRatApi.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -82,7 +81,7 @@ builder.Services.AddDbContext<GymDbContext>(o =>
 builder.Services.AddControllers().AddFluentValidation();
 builder.Services.AddScoped<IUserServices,UserServices>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
-builder.Services.AddScoped<IValidator<UserCreateCommand>, RegisterUserValidator>(); 
+builder.Services.AddScoped<IValidator<UserCreateCommand>, UserCreateCommandValidator>(); 
 builder.Services.AddScoped<IExerciseServices,ExerciseServices>();
 builder.Services.AddScoped<IVideoServices,VideoServices>();
 builder.Services.AddScoped<IBodyPartService, BodyPartService>();
