@@ -4,6 +4,7 @@ using GymRatApi.Entieties;
 using GymRatApi.ModuleData.Commands.UserCommands;
 using GymRatApi.ModuleData.Dto;
 using GymRatApi.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GymRatApi.Controllers
@@ -11,6 +12,7 @@ namespace GymRatApi.Controllers
 
     [ApiController]
     [Route("[controller]")]
+   
     public class UserController : ControllerBase
     {
 

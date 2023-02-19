@@ -52,6 +52,7 @@ namespace GymRatApi.Services
         {
             var training = _mapper.Map<Training>(trainingUpdateCommand);
             _dbContext.Training.Update(training);
+            _dbContext.SaveChanges();
             return Task.CompletedTask;
         }
     }
