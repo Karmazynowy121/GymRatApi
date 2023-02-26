@@ -107,6 +107,8 @@ namespace GymRatApi.Services
         public Task Update(UserUpdateCommand userUpdateCommand)
         {
             var user = _mapper.Map<User>(userUpdateCommand);
+            var hashedPassword = _passwordHasher.HashPassword(user, user.Password);
+            user.Password = hashedPassword;
             _dbContext.Users.Update(user);
             _dbContext.SaveChanges();
             return Task.CompletedTask;
