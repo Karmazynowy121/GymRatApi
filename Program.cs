@@ -17,7 +17,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using static System.Net.WebRequestMethods;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -54,7 +54,6 @@ builder.Services.AddDbContext<GymDbContext>(o =>
 {
     o.UseSqlite($"Data Source={Path.Combine(AppDomain.CurrentDomain.BaseDirectory,builder.Configuration.GetConnectionString("DatabaseName"))}");
 });
-
     var authenticationSettings = new AuthenticationSettings();
     
     builder.Configuration.GetSection("Authentication").Bind(authenticationSettings);
@@ -64,7 +63,17 @@ builder.Services.AddDbContext<GymDbContext>(o =>
         option.DefaultAuthenticateScheme = "Bearer";
         option.DefaultScheme = "Bearer";
         option.DefaultChallengeScheme = "Bearer";
-    }).AddJwtBearer(cfg =>
+    }).AddCookie(options =>
+    {
+        options.Cookie.Name = "MyApp.Cookie";
+        options.Cookie.SameSite = SameSiteMode.Strict;
+        options.Events.OnRedirectToLogin = context =>
+        {
+            context.Response.StatusCode = 401;
+            return Task.CompletedTask;
+        };
+    })
+    .AddJwtBearer(cfg =>
     {
         cfg.RequireHttpsMetadata = false;
         cfg.SaveToken = true;
@@ -75,8 +84,6 @@ builder.Services.AddDbContext<GymDbContext>(o =>
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationSettings.JwtKey)),
         };
     });
-
-
 
 builder.Services.AddControllers().AddFluentValidation();
 builder.Services.AddScoped<IUserServices,UserServices>();
@@ -107,7 +114,6 @@ app.UseAuthentication();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

@@ -1,2 +1,2 @@
 # GymRatApi
- 
+ ![Screenshot](Gymrat.png)
