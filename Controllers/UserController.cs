@@ -1,7 +1,10 @@
 using GymRatApi.Commands.UserCommands;
 using GymRatApi.Dto;
 using GymRatApi.Entieties;
+using GymRatApi.ModuleData.Commands.UserCommands;
+using GymRatApi.ModuleData.Dto;
 using GymRatApi.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GymRatApi.Controllers
@@ -9,6 +12,7 @@ namespace GymRatApi.Controllers
 
     [ApiController]
     [Route("[controller]")]
+   
     public class UserController : ControllerBase
     {
 
@@ -31,6 +35,12 @@ namespace GymRatApi.Controllers
         {
             var newUser = await _userServices.Create(userCreateCommand);
             return Ok(newUser);
+        }
+        [HttpPost("login")]
+        public async Task<ActionResult<LoggedUserDto>> Login([FromBody]UserLogginCommand userLogginCommand)
+        {
+            var loggedUser = await _userServices.Login(userLogginCommand);
+            return Ok(loggedUser);
         }
         [HttpGet]
         public async Task<List<UserDto>> GetAll()
@@ -70,7 +80,7 @@ namespace GymRatApi.Controllers
                 return NotFound(ex.Message);
             }
         }
-        [HttpPatch]
+        [HttpPost]
 
         public async Task<ActionResult> Update([FromBody] UserUpdateCommand userUpdateCommand)
         {

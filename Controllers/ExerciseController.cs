@@ -67,5 +67,22 @@ namespace GymRatApi.Controllers
                 return NotFound(ex.Message);
             }
         }
+        [HttpPost]
+        public async Task<ActionResult> Update([FromBody] ExerciseUpdateCommand exerciseUpdateCommand)
+        {
+            try
+            {
+                if (exerciseUpdateCommand == null)
+                {
+                    return BadRequest("Exercise does not exist");
+                }
+                await _exerciseServices.Update(exerciseUpdateCommand);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
     }
 }

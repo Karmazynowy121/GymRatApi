@@ -59,7 +59,8 @@ namespace GymRatApi.Services
         }
         public Task Update(SportUpdateCommand sportUpdateCommand)
         {
-            _dbContext.Update(sportUpdateCommand);
+            var sport = _mapper.Map<Sport>(sportUpdateCommand);
+            _dbContext.Update(sport);
             _dbContext.SaveChanges();
             return Task.CompletedTask;
 

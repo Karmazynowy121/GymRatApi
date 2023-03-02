@@ -10,6 +10,7 @@ namespace GymRatApi.Services
       Task<List<ExerciseDto>> GetAll();
       Task<ExerciseDto> GetbyName(string name);
       Task<ExerciseDto> GetbyId(int exerciseId);
+      Task Update(ExerciseUpdateCommand exerciseUpdateCommand);
       Task Delete(int id);
     }
 }

@@ -2,6 +2,7 @@
 using GymRatApi.Commands.TrainingCommands;
 using GymRatApi.Dto;
 using GymRatApi.Entieties;
+using Microsoft.EntityFrameworkCore;
 
 namespace GymRatApi.Services
 {
@@ -14,6 +15,9 @@ namespace GymRatApi.Services
             _mapper = mapper;
         }
 
+        public Task<TrainingDto> GetById(int id)
+            => Task.FromResult(_mapper.Map<TrainingDto>(_dbContext.Training.FirstOrDefault(ts => ts.Id == id)));
+
         public Task<TrainingDto> Create(TrainingCreateCommand trainingCreateCommand)
         {
             if (trainingCreateCommand == null)
@@ -21,7 +25,8 @@ namespace GymRatApi.Services
                 throw new ArgumentNullException("CreateTrainingContract is empty");
             }
 
-            var trainingScheuldeFromDb = _dbContext.TrainingScheulde.FirstOrDefault(ts => ts.Id == trainingCreateCommand.TrainingScheudleId);
+            var trainingScheuldeFromDb = _dbContext.TrainingScheulde
+                .FirstOrDefault(ts => ts.Id == trainingCreateCommand.TrainingScheudleId);
 
             if (trainingScheuldeFromDb == null)
             {
@@ -39,6 +44,16 @@ namespace GymRatApi.Services
             _dbContext.Add(newTraining);
             _dbContext.SaveChanges();
             return Task.FromResult(_mapper.Map<TrainingDto>(newTraining));
+        }
+        public Task<List<TrainingDto>> GetAll()
+          => Task.FromResult(_mapper.Map<List<TrainingDto>>(_dbContext.Training.ToList()));
+        
+        public Task Update(TrainingUpdateCommand trainingUpdateCommand)
+        {
+            var training = _mapper.Map<Training>(trainingUpdateCommand);
+            _dbContext.Training.Update(training);
+            _dbContext.SaveChanges();
+            return Task.CompletedTask;
         }
     }
 }

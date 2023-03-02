@@ -57,7 +57,8 @@ namespace GymRatApi.Services
         }
         public Task Update(TrainingScheuldeUpdateCommand trainingScheuldeUpdateCommand)
         {
-            _dbContext.Update(trainingScheuldeUpdateCommand);
+            var trainingScheulde = _mapper.Map<TrainingScheulde>(trainingScheuldeUpdateCommand);
+            _dbContext.Update(trainingScheulde);
             _dbContext.SaveChanges();
             return Task.CompletedTask;
 
@@ -74,6 +75,7 @@ namespace GymRatApi.Services
             return Task.CompletedTask;
         }
         public Task<List<TrainingScheuldeDto>> GetAll() 
-            => Task.FromResult(_mapper.Map <List<TrainingScheuldeDto>>(_dbContext.TrainingScheulde.ToList()));
+            => Task.FromResult(_mapper.Map<List<TrainingScheuldeDto>>(
+                _dbContext.TrainingScheulde.Include(ts => ts.Trainings).Include(ts => ts.User).ToList()));
     }
 }

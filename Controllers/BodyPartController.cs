@@ -1,6 +1,5 @@
 ﻿using GymRatApi.Commands.BodyPartCommands;
 using GymRatApi.Dto;
-using GymRatApi.Entieties;
 using GymRatApi.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -72,7 +71,7 @@ namespace GymRatApi.Controllers
             }
 
         }
-        [HttpPatch]
+        [HttpPost]
         public async Task<ActionResult> Update([FromBody] BodyPartUpdateCommand bodyPartUpdateCommand)
         {
             try

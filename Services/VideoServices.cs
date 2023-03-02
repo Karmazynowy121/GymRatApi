@@ -61,7 +61,8 @@ namespace GymRatApi.Services
         }
         public Task Update(VideoUpdateCommand videoUpdateCommand)
         {
-            _dbContext.Update(videoUpdateCommand); 
+            var video = _mapper.Map<Video>(videoUpdateCommand);
+            _dbContext.Update(video); 
             _dbContext.SaveChanges();
             return Task.CompletedTask;
                 

@@ -64,7 +64,8 @@ namespace GymRatApi.Services
         }
         public Task Update(BodyPartUpdateCommand bodyPartUpdateCommand)
         {
-            _dbContext.Update(bodyPartUpdateCommand);
+            var bodyPart = _mapper.Map<BodyPart>(bodyPartUpdateCommand);
+            _dbContext.Update(bodyPart);
             _dbContext.SaveChanges();
             return Task.CompletedTask;
 
