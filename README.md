@@ -1,6 +1,6 @@
 # GymRatApi
 ## Database:
-![image](https://user-images.githubusercontent.com/104931543/222522042-cbbfc122-2318-4acb-b168-79f7e582ba46.png)
+![image](https://user-images.githubusercontent.com/104931543/222954778-4ba0963e-fbf9-4b98-9232-723142170a94.png)
 ## Table of contents
 * General info
 * Technologies
