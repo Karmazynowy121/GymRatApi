@@ -15,6 +15,7 @@ namespace GymRatApi.Controllers
         {
             _bodyPartService = bodyPartService;
         }
+
         [HttpPut]
         public async Task<IActionResult> CreateBodyPart([FromBody] BodyPartCreateCommand bodyPartCreateCommand)
         {
@@ -32,11 +33,13 @@ namespace GymRatApi.Controllers
                 return NotFound(ex.Message);
             }
         }
+
         [HttpGet]
         public async Task<List<BodyPartDto>> GetAll()
         {
             return await _bodyPartService.GetAll();
         }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<BodyPartDto>> Get([FromRoute] int id)
         {
@@ -53,6 +56,7 @@ namespace GymRatApi.Controllers
                 return NotFound(ex.Message);
             }
         }
+
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete([FromRoute] int id)
         {
@@ -71,6 +75,7 @@ namespace GymRatApi.Controllers
             }
 
         }
+        
         [HttpPost]
         public async Task<ActionResult> Update([FromBody] BodyPartUpdateCommand bodyPartUpdateCommand)
         {
